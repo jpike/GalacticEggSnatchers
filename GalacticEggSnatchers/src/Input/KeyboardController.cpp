@@ -1,31 +1,29 @@
+#include <SFML/Window.hpp>
 #include "Input/KeyboardController.h"
 
 using namespace INPUT;
 
 KeyboardController::KeyboardController()
 {
-    /// @todo
+    // Nothing else to do.
 }
         
 KeyboardController::~KeyboardController()
 {
-    /// @todo
+    // Nothing else to do.
 }
 
 bool KeyboardController::LeftButtonPressed() const
 {
-    /// @todo
-    return false;
+    return sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
 }
 
 bool KeyboardController::RightButtonPressed() const
 {
-    /// @todo
-    return false;
+    return sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
 }
 
 bool KeyboardController::FireButtonPressed() const
 {
-    /// @todo
-    return false;
+    return sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 }

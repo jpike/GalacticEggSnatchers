@@ -37,6 +37,18 @@
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{b855bd23-34f6-4664-894d-38cc145a7e40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{fe11cb75-39dd-4585-a199-ec01d9e58236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physics\Collisions">
+      <UniqueIdentifier>{4944902d-605e-4df0-b09f-6db3ea51a401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{be18ca89-427f-46e4-a84e-b6ef5852f497}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics\Collisions">
+      <UniqueIdentifier>{562d17bc-66be-4fa7-923e-3b0ee27a1101}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -59,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="src\Objects\EasterEgg.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\Collisions\CollisionSystem.cpp">
+      <Filter>Source Files\Physics\Collisions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="src\States\AllStates.h">
       <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\Collisions\ICollidable.h">
+      <Filter>Header Files\Physics\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\Collisions\CollisionSystem.h">
+      <Filter>Header Files\Physics\Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

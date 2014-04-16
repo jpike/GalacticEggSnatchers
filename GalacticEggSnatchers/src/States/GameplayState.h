@@ -3,7 +3,9 @@
 #include <list>
 #include <memory>
 #include <vector>
+#include "Input/IInputController.h"
 #include "Objects/AllObjects.h"
+#include "Physics/Collisions/CollisionSystem.h"
 #include "States/IGameState.h"
 
 namespace STATES
@@ -16,8 +18,9 @@ namespace STATES
     class GameplayState : public IGameState
     {
     public:
-        /// @brief  Constructor.
-        explicit GameplayState();
+        /// @brief      Constructor.
+        /// @param[in]  screenBoundsInPixels - The boundaries of the screen for which to confine game objects.
+        explicit GameplayState(const sf::FloatRect& screenBoundsInPixels);
 
         /// @brief  Destructor.
         virtual ~GameplayState();
@@ -44,6 +47,25 @@ namespace STATES
         /// @brief  Creates the initial enemy aliens.
         /// @return The aliens in their initial state for a new gameplay session.
         std::list< std::shared_ptr<OBJECTS::Alien> > CreateInitialAliens();
+
+        /// @brief      Handles input for the player for a single update frame.
+        /// @param[in]  playerController - The controller supplying input for the player.
+        /// @param[in]  elapsedTime - The elapsed time since the last frame of updating.
+        void HandleInput(const INPUT::IInputController& playerController, const sf::Time& elapsedTime);
+
+        /// @brief      Updates all of the game objects in this state for a single update frame.
+        /// @param[in]  elapsedTime - The elapsed time since the last frame of updating.
+        void UpdateGameObjects(const sf::Time& elapsedTime);
+
+        /// @brief      Handles screen boundary collisions for game objects in this state.
+        /// @param[in]  screenBoundsInPixels - The boundaries of the screen for which to confine game objects.
+        void HandleScreenBoundaryCollisions(const sf::FloatRect& screenBoundsInPixels);
+
+        sf::FloatRect m_screenBoundsInPixels;   ///< The boundaries of the screen for which to confine game objects.
+        
+        PHYSICS::COLLISIONS::CollisionSystem m_collisionSystem; ///< The system that handles collisions.
+        
+        std::shared_ptr<INPUT::IInputController> m_playerController;    ///< The controller supplying input for the player.
 
         std::shared_ptr<OBJECTS::EasterBunny> m_bunnyPlayer;    ///< The Easter bunny controlled by the player.
         std::vector< std::shared_ptr<OBJECTS::EasterEgg> > m_easterEggs;    ///< The Easter eggs to be protected by the player.

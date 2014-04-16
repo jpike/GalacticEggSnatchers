@@ -5,14 +5,19 @@
 
 using namespace STATES;
 
-GameplayState::GameplayState() :
+GameplayState::GameplayState(const sf::FloatRect& screenBoundsInPixels) :
+    m_screenBoundsInPixels(screenBoundsInPixels),
+    m_collisionSystem(),
+    m_playerController(),
     m_bunnyPlayer(),
     m_easterEggs(),
     m_aliens(),
     m_missiles(),
-    m_sprites()
+    m_sprites(),
+    m_textures()
 {
     // CREATE THE INITIAL OBJECTS FOR A NEW GAMEPLAY SESSION.
+    m_playerController = std::make_shared<INPUT::KeyboardController>();
     m_bunnyPlayer = CreateInitialBunnyPlayer();
     m_easterEggs = CreateInitialEasterEggs();
     m_aliens = CreateInitialAliens();
@@ -26,7 +31,14 @@ GameplayState::~GameplayState()
 
 void GameplayState::Update(const sf::Time& elapsedTime)
 {
-    /// @todo
+    // HANDLE USER INPUT.
+    HandleInput(*m_playerController, elapsedTime);
+
+    // UPDATE THE MAIN GAME OBJECTS.
+    UpdateGameObjects(elapsedTime);
+    
+    // HANDLE COLLISIONS WITH THE SCREEN BOUNDARIES.
+    HandleScreenBoundaryCollisions(m_screenBoundsInPixels);
 }
 
 void GameplayState::Render(sf::RenderTarget& renderTarget)
@@ -63,11 +75,8 @@ std::shared_ptr<OBJECTS::EasterBunny> GameplayState::CreateInitialBunnyPlayer()
         
     bunnySprite->setPosition(initialXScreenPosition, initialYScreenPosition);
 
-    // CREATE THE KEYBOARD CONTROLLER FOR THE BUNNY.
-    std::shared_ptr<INPUT::IInputController> bunnyPlayerController = std::make_shared<INPUT::KeyboardController>();
-
     // CREATE THE BUNNY FOR THE PLAYER.
-    std::shared_ptr<OBJECTS::EasterBunny> bunnyPlayer = std::make_shared<OBJECTS::EasterBunny>(bunnySprite, bunnyPlayerController);
+    std::shared_ptr<OBJECTS::EasterBunny> bunnyPlayer = std::make_shared<OBJECTS::EasterBunny>(bunnySprite);
 
     // Save the sprite for rendering later.
     m_sprites.push_back(bunnySprite);
@@ -177,4 +186,71 @@ std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(
     }
 
     return initialAliens;
+}
+
+void GameplayState::HandleInput(const INPUT::IInputController& playerController, const sf::Time& elapsedTime)
+{
+    // CHECK IF MOVEMENT INPUT WAS PROVIDED.
+    bool leftButtonPressed = playerController.LeftButtonPressed();
+    bool rightButtonPressed = playerController.RightButtonPressed();
+    // We don't want to move the bunny if both (opposite) direction buttons are pressed.
+    bool onlyLeftButtonPressed = (leftButtonPressed && !rightButtonPressed);
+    bool onlyRightButtonPressed = (rightButtonPressed && !leftButtonPressed);
+
+    if (onlyLeftButtonPressed)
+    {
+        m_bunnyPlayer->MoveLeft(elapsedTime);
+    }
+    else if (onlyRightButtonPressed)
+    {
+        m_bunnyPlayer->MoveRight(elapsedTime);
+    }
+
+    // CHECK IF FIRING INPUT WAS PROVIDED.
+    if (playerController.FireButtonPressed())
+    {
+        /// @todo   Implement missile firing.  We need to figure out how to prevent the player
+        ///         from firing missiles too quickly and also how to actually add the missiles to the game.
+        /// std::shared_ptr<OBJECTS::WEAPONS::Missile> missile = m_bunnyPlayer->FireMissile();
+        /// m_missiles.push_back(missile);
+    }
+}
+
+void GameplayState::UpdateGameObjects(const sf::Time& elapsedTime)
+{
+    // UPDATE THE PLAYER BUNNY.
+    m_bunnyPlayer->Update(elapsedTime);
+
+    // UPDATE THE EASTER EGGS.
+    for (std::shared_ptr<OBJECTS::EasterEgg>& easterEgg : m_easterEggs)
+    {
+        easterEgg->Update(elapsedTime);
+    }
+
+    // UPDATE THE ALIENS.
+    for (std::shared_ptr<OBJECTS::Alien>& alien : m_aliens)
+    {
+        alien->Update(elapsedTime);
+    }
+
+    // UPDATE THE MISSILES.
+    for (std::shared_ptr<OBJECTS::WEAPONS::Missile>& missile : m_missiles)
+    {
+        missile->Update(elapsedTime);
+    }
+}
+
+void GameplayState::HandleScreenBoundaryCollisions(const sf::FloatRect& screenBoundsInPixels)
+{
+    // HANDLE COLLISIONS FOR THE BUNNY.
+    m_collisionSystem.HandleBoundaryCollisions(screenBoundsInPixels, *m_bunnyPlayer);
+
+    // HANDLE COLLISIONS FOR THE ALIENS.
+    /// @todo
+
+    // HANDLE COLLISIONS FOR THE MISSILES.
+    /// @todo
+
+    // No other game objects (easter eggs, etc.) need to have collisions with the screen
+    // boundaries handled since they don't move.
 }
