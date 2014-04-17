@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "Graphics/IRenderable.h"
 #include "Objects/IGameObject.h"
 
 namespace OBJECTS
@@ -15,7 +16,7 @@ namespace OBJECTS
     ///
     /// @todo   Remove the copy constructor and assignment operator if they aren't needed.
     ////////////////////////////////////////////////////////
-    class Alien : public IGameObject
+    class Alien : public IGameObject, public GRAPHICS::IRenderable
     {
     public:
         /// @brief  Constructor.  Resources provided via the constructor
@@ -37,6 +38,9 @@ namespace OBJECTS
 
         /// @copydoc    IGameObject::Update(const sf::Time& elapsedTime)
         virtual void Update(const sf::Time& elapsedTime);
+
+        /// @copydoc    IRenderable::Render(sf::RenderTarget& renderTarget)
+        virtual void Render(sf::RenderTarget& renderTarget);
 
     private:
         /// @brief      Helper method for copying.

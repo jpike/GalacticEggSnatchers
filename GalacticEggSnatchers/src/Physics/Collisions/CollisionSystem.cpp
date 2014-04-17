@@ -12,7 +12,7 @@ CollisionSystem::~CollisionSystem()
     // Nothing to do.
 }
 
-void CollisionSystem::HandleBoundaryCollisions(const sf::FloatRect& boundsInPixels, ICollidable& collidableObject)
+bool CollisionSystem::HandleBoundaryCollisions(const sf::FloatRect& boundsInPixels, ICollidable& collidableObject)
 {
     // HANDLE COLLISIONS FOR THE OBJECT.
     // It is only expected that an object can exceed one of the boundaries at a time,
@@ -29,7 +29,8 @@ void CollisionSystem::HandleBoundaryCollisions(const sf::FloatRect& boundsInPixe
         // Have the object perform any special handling it needs for colliding with the boundary.
         collidableObject.OnWorldBoundaryCollide();
 
-        return;
+        // A collision occurred.
+        return true;
     }
 
     // Check for the bottom boundary being exceed.
@@ -46,7 +47,8 @@ void CollisionSystem::HandleBoundaryCollisions(const sf::FloatRect& boundsInPixe
         // Have the object perform any special handling it needs for colliding with the boundary.
         collidableObject.OnWorldBoundaryCollide();
 
-        return;
+        // A collision occurred.
+        return true;
     }
 
     // Check for the left boundary being exceeded.
@@ -59,7 +61,8 @@ void CollisionSystem::HandleBoundaryCollisions(const sf::FloatRect& boundsInPixe
         // Have the object perform any special handling it needs for colliding with the boundary.
         collidableObject.OnWorldBoundaryCollide();
 
-        return;
+        // A collision occurred.
+        return true;
     }
     
     // Check for the right boundary being exceeded.
@@ -76,6 +79,10 @@ void CollisionSystem::HandleBoundaryCollisions(const sf::FloatRect& boundsInPixe
         // Have the object perform any special handling it needs for colliding with the boundary.
         collidableObject.OnWorldBoundaryCollide();
 
-        return;
+        // A collision occurred.
+        return true;
     }
+
+    // NO COLLISION OCCURRED.
+    return false;
 }

@@ -29,6 +29,11 @@ void Alien::Update(const sf::Time& elapsedTime)
     /// @todo
 }
 
+void Alien::Render(sf::RenderTarget& renderTarget)
+{
+    renderTarget.draw(*m_sprite);
+}
+
 void Alien::Copy(const Alien& alienToCopy)
 {
     /// @todo

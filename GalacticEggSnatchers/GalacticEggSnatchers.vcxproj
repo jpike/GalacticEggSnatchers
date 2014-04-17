@@ -99,16 +99,20 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\GalacticEggSnatchersGame.cpp" />
+    <ClCompile Include="src\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="src\Input\KeyboardController.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Objects\Alien.cpp" />
     <ClCompile Include="src\Objects\EasterBunny.cpp" />
     <ClCompile Include="src\Objects\EasterEgg.cpp" />
+    <ClCompile Include="src\Objects\Weapons\Missile.cpp" />
     <ClCompile Include="src\Physics\Collisions\CollisionSystem.cpp" />
     <ClCompile Include="src\States\GameplayState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GalacticEggSnatchersGame.h" />
+    <ClInclude Include="src\Graphics\GraphicsSystem.h" />
+    <ClInclude Include="src\Graphics\IRenderable.h" />
     <ClInclude Include="src\Input\IInputController.h" />
     <ClInclude Include="src\Input\KeyboardController.h" />
     <ClInclude Include="src\Objects\Alien.h" />

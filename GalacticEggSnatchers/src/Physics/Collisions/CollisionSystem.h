@@ -8,7 +8,7 @@ namespace PHYSICS
 namespace COLLISIONS
 {
     ////////////////////////////////////////////////////////
-    /// @brief  A responsible responsible for managing collisions
+    /// @brief  Responsible responsible for managing collisions
     ///         between collidable objects.
     ////////////////////////////////////////////////////////
     class CollisionSystem
@@ -26,7 +26,8 @@ namespace COLLISIONS
         ///                 should be smaller that than of the provided boundaries.
         /// @param[in]      boundsInPixels - The boundaries for which to confine the object.
         /// @param[in,out]  collidableObject - The object for which to handle boundary collisions.
-        void HandleBoundaryCollisions(const sf::FloatRect& boundsInPixels, ICollidable& collidableObject);
+        /// @return         True if the object collided with a boundary; false otherwise.
+        bool HandleBoundaryCollisions(const sf::FloatRect& boundsInPixels, ICollidable& collidableObject);
 
     private:
         CollisionSystem(const CollisionSystem& systemToCopy);   ///< Private to disallow copying.

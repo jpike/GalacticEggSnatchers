@@ -3,6 +3,7 @@
 #include <list>
 #include <memory>
 #include <vector>
+#include "Graphics/GraphicsSystem.h"
 #include "Input/IInputController.h"
 #include "Objects/AllObjects.h"
 #include "Physics/Collisions/CollisionSystem.h"
@@ -61,18 +62,25 @@ namespace STATES
         /// @param[in]  screenBoundsInPixels - The boundaries of the screen for which to confine game objects.
         void HandleScreenBoundaryCollisions(const sf::FloatRect& screenBoundsInPixels);
 
-        sf::FloatRect m_screenBoundsInPixels;   ///< The boundaries of the screen for which to confine game objects.
-        
-        PHYSICS::COLLISIONS::CollisionSystem m_collisionSystem; ///< The system that handles collisions.
-        
-        std::shared_ptr<INPUT::IInputController> m_playerController;    ///< The controller supplying input for the player.
+        /// @brief          Renders all renderable game objects on the provided render target.
+        /// @param[in,out]  renderTarget - The render target to render to.
+        void RenderGameObjects(sf::RenderTarget& renderTarget);
 
+        // GRAPHICS MEMBER VARIABLES.
+        GRAPHICS::GraphicsSystem m_graphicsSystem;  ///< The system that handles graphics resources.
+        
+        // COLLISION MEMBER VARIABLES.
+        sf::FloatRect m_screenBoundsInPixels;   ///< The boundaries of the screen for which to confine game objects.
+        PHYSICS::COLLISIONS::CollisionSystem m_collisionSystem; ///< The system that handles collisions.
+
+        // INPUT MEMBER VARIABLES.
+        std::shared_ptr<INPUT::IInputController> m_playerController;    ///< The controller supplying input for the player.
+        sf::Clock m_bunnyMissileFiringClock;    ///< A clock for tracking how much time passes between the bunny firing a missile.
+
+        // GAME OBJECT MEMBER VARIABLES.
         std::shared_ptr<OBJECTS::EasterBunny> m_bunnyPlayer;    ///< The Easter bunny controlled by the player.
         std::vector< std::shared_ptr<OBJECTS::EasterEgg> > m_easterEggs;    ///< The Easter eggs to be protected by the player.
         std::list< std::shared_ptr<OBJECTS::Alien> > m_aliens;  ///< The enemy aliens attempting to abduct Easter eggs.
         std::list< std::shared_ptr<OBJECTS::WEAPONS::Missile> > m_missiles;  ///< The missiles fired by the player or enemies.
-
-        std::list< std::shared_ptr<sf::Sprite> > m_sprites;   ///< All sprites to be rendered by this state.
-        std::list< std::shared_ptr<sf::Texture> > m_textures;   ///< Stores texture data for sprites.  @todo Rethink how this texture data is managed.
     };
 }

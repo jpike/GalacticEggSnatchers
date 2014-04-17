@@ -2,7 +2,9 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "Graphics/IRenderable.h"
 #include "Objects/IGameObject.h"
+#include "Physics/Collisions/ICollidable.h"
 
 namespace OBJECTS
 {
@@ -27,17 +29,16 @@ namespace WEAPONS
     ///
     /// @todo   Remove the copy constructor and assignment operator if they aren't needed.
     ////////////////////////////////////////////////////////
-    class Missile : public IGameObject
+    class Missile : public IGameObject, public PHYSICS::COLLISIONS::ICollidable, public GRAPHICS::IRenderable
     {
     public:
         /// @brief      Constructor.  Resources provided via the constructor
         ///             may be modified by this object during its lifetime.
-        /// @param[in]  initialPosition - The initial position of the missile.
-        /// @param[in]  velocity - The velocity of the missile.
+        /// @param[in]  source - The source of missile.
+        /// @param[in]  velocity - The velocity of the missile (in pixels per second).
         /// @param      sprite - The graphical sprite for this missile.
         explicit Missile(
             const MissileSource source,
-            const sf::Vector2f& initialPosition,
             const sf::Vector2f& velocity,
             const std::shared_ptr<sf::Sprite>& sprite);
 
@@ -56,12 +57,34 @@ namespace WEAPONS
         /// @copydoc    IGameObject::Update(const sf::Time& elapsedTime)
         virtual void Update(const sf::Time& elapsedTime);
 
+        /// @copydoc    ICollidable::GetBoundingRectangle() const
+        virtual sf::FloatRect GetBoundingRectangle() const;
+
+        /// @copydoc    ICollidable::SetTopPosition(const float topPositionInPixels)
+        virtual void SetTopPosition(const float topPositionInPixels);
+
+        /// @copydoc    ICollidable::SetBottomPosition(const float bottomPositionInPixels)
+        virtual void SetBottomPosition(const float bottomPositionInPixels);
+
+        /// @copydoc    ICollidable::SetLeftPosition(const float leftPositionInPixels)
+        virtual void SetLeftPosition(const float leftPositionInPixels);
+
+        /// @copydoc    ICollidable::SetRightPosition(const float rightPositionInPixels)
+        virtual void SetRightPosition(float rightPositionInPixels);
+
+        /// @copydoc    ICollidable::OnWorldBoundaryCollide()
+        virtual void OnWorldBoundaryCollide();
+
+        /// @copydoc    IRenderable::Render(sf::RenderTarget& renderTarget)
+        virtual void Render(sf::RenderTarget& renderTarget);
+
     private:
         /// @brief      Helper method for copying.
         /// @param[in]  missileToCopy - The missile to copy.
         void Copy(const Missile& missileToCopy);
 
-        sf::Vector2f m_velocity;    ///< The missile's velocity.
+        MissileSource m_source; ///< The missile's source.
+        sf::Vector2f m_velocity;    ///< The missile's velocity (in pixels per second).
         std::shared_ptr<sf::Sprite> m_sprite;   ///< The missile's graphical sprite.
     };
 }

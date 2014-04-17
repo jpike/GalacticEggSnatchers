@@ -29,6 +29,11 @@ void EasterEgg::Update(const sf::Time& elapsedTime)
     /// @todo
 }
 
+void EasterEgg::Render(sf::RenderTarget& renderTarget)
+{
+    renderTarget.draw(*m_sprite);
+}
+
 void EasterEgg::Copy(const EasterEgg& eggToCopy)
 {
     /// @todo

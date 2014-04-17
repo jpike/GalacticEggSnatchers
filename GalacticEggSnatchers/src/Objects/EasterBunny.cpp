@@ -37,6 +37,11 @@ EasterBunny& EasterBunny::operator= (const EasterBunny& rhsBunny)
     return (*this);
 }
 
+void EasterBunny::Update(const sf::Time& elapsedTime)
+{
+    // Nothing else to do yet.
+}
+
 sf::FloatRect EasterBunny::GetBoundingRectangle() const
 {
     return m_sprite->getGlobalBounds();
@@ -95,9 +100,9 @@ void EasterBunny::OnWorldBoundaryCollide()
     // to the bunny when it collides with a screen boundary.
 }
 
-void EasterBunny::Update(const sf::Time& elapsedTime)
+void EasterBunny::Render(sf::RenderTarget& renderTarget)
 {
-    // Nothing else to do yet.
+    renderTarget.draw(*m_sprite);
 }
 
 void EasterBunny::MoveLeft(const sf::Time& elapsedTime)
@@ -116,10 +121,26 @@ void EasterBunny::MoveRight(const sf::Time& elapsedTime)
     m_sprite->move(rightMovementInPixels, NO_VERTICAL_MOVEMENT);
 }
 
-std::shared_ptr<OBJECTS::WEAPONS::Missile> EasterBunny::FireMissile()
+std::shared_ptr<OBJECTS::WEAPONS::Missile> EasterBunny::FireMissile(const std::shared_ptr<sf::Sprite>& missileSprite)
 {
-    /// @todo
-    return std::shared_ptr<OBJECTS::WEAPONS::Missile>();
+    // POSITION THE MISSILE SPRITE SO THAT IT FIRES FROM THE BUNNY.
+    const sf::Vector2f& bunnyPosition = m_sprite->getPosition();
+    float bunnyXPosition = bunnyPosition.x;
+    float missileHeight = missileSprite->getGlobalBounds().height;
+    float yPositionAboveBunny = (bunnyPosition.y - missileHeight);
+    missileSprite->setPosition(bunnyXPosition, yPositionAboveBunny);
+
+    // FIRE THE MISSILE UPWARD FROM THE BUNNY.
+    const float NO_HORIZONTAL_MOVEMENT = 0.0f;
+    const float MISSILE_Y_VELOCITY_IN_PIXELS_PER_SECOND = -128.0f;
+    sf::Vector2f missileVelocity(NO_HORIZONTAL_MOVEMENT, MISSILE_Y_VELOCITY_IN_PIXELS_PER_SECOND);
+    
+    std::shared_ptr<OBJECTS::WEAPONS::Missile> bunnyMissile = std::make_shared<OBJECTS::WEAPONS::Missile>(
+        OBJECTS::WEAPONS::MISSILE_SOURCE_EASTER_BUNNY,
+        missileVelocity,
+        missileSprite);
+
+    return bunnyMissile;
 }
 
 void EasterBunny::Copy(const EasterBunny& bunnyToCopy)

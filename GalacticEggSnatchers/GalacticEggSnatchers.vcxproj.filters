@@ -49,6 +49,15 @@
     <Filter Include="Source Files\Physics\Collisions">
       <UniqueIdentifier>{562d17bc-66be-4fa7-923e-3b0ee27a1101}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects\Weapons">
+      <UniqueIdentifier>{297b8e52-4afc-4081-bc34-25431a8bafe6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{de0d7563-7954-4d5c-bb42-d61e1bca7f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{c86334f3-e2c3-4072-b5c7-f550af03ade9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -74,6 +83,12 @@
     </ClCompile>
     <ClCompile Include="src\Physics\Collisions\CollisionSystem.cpp">
       <Filter>Source Files\Physics\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Objects\Weapons\Missile.cpp">
+      <Filter>Source Files\Objects\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\GraphicsSystem.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +142,12 @@
     </ClInclude>
     <ClInclude Include="src\Physics\Collisions\CollisionSystem.h">
       <Filter>Header Files\Physics\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\GraphicsSystem.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\IRenderable.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
