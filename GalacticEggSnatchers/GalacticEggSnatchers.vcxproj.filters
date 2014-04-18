@@ -64,6 +64,12 @@
     <Filter Include="Source Files\ArtificialIntelligence">
       <UniqueIdentifier>{e1d94294-2880-4942-982f-8b2949632c52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics\Gui">
+      <UniqueIdentifier>{d52dc892-45a0-4281-bb7b-c75709bb4878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Gui">
+      <UniqueIdentifier>{d62e4d88-5cc0-45ae-bf75-484be797eab5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -104,6 +110,18 @@
     </ClCompile>
     <ClCompile Include="src\Objects\Explosion.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Gui\LivesLabel.cpp">
+      <Filter>Source Files\Graphics\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Gui\ScoreLabel.cpp">
+      <Filter>Source Files\Graphics\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Gui\HighScoreLabel.cpp">
+      <Filter>Source Files\Graphics\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Gui\GameplayHud.cpp">
+      <Filter>Source Files\Graphics\Gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +190,18 @@
     </ClInclude>
     <ClInclude Include="src\Objects\Explosion.h">
       <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Gui\LivesLabel.h">
+      <Filter>Header Files\Graphics\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Gui\ScoreLabel.h">
+      <Filter>Header Files\Graphics\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Gui\HighScoreLabel.h">
+      <Filter>Header Files\Graphics\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Gui\GameplayHud.h">
+      <Filter>Header Files\Graphics\Gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

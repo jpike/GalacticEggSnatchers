@@ -29,10 +29,21 @@ namespace GRAPHICS
         /// @return     The texture resource, if successfully loaded.  Nullptr otherwise.
         std::shared_ptr<sf::Texture> GetTexture(const std::string& filepath);
 
+        /// @brief      Gets the specified font resource.
+        ///             It will persist in memory as long as this object is alive.
+        ///             If a font at the specified filepath has already been loaded,
+        ///             the existing resource may be returned as opposed to loading
+        ///             a new instance.
+        /// @param[in]  filepath - The filepath (relative or absolute) path to the font file.
+        /// @return     The font resource, if successfully loaded.  Nullptr otherwise.
+        /// @todo       Should this go in a generic resource manager instead?
+        std::shared_ptr<sf::Font> GetFont(const std::string& filepath);
+
     private:
         GraphicsSystem(const GraphicsSystem& systemToCopy);   ///< Private to disallow copying.
         GraphicsSystem& operator= (const GraphicsSystem& collisionSystem);    ///< Private to disallow assignment.
 
         std::unordered_map< std::string, std::shared_ptr<sf::Texture> > m_textures; ///< Texture resources managed by this system.
+        std::unordered_map< std::string, std::shared_ptr<sf::Font> > m_fonts;   ///< Font resources managed by this system.
     };
 }

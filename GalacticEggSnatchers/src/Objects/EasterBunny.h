@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "Graphics/IRenderable.h"
@@ -18,6 +19,8 @@ namespace OBJECTS
     class EasterBunny : public IGameObject, public PHYSICS::COLLISIONS::ICollidable, public GRAPHICS::IRenderable
     {
     public:
+        static const uint8_t DEFAULT_LIVES_COUNT;   ///< The default number of lives for a bunny.
+        
         /// @brief  The movement speed of the bunny in pixels for second.
         ///         The actual value has been determined based on experimentation to
         ///         decide what feels right and what would help balance the gameplay.
@@ -83,11 +86,19 @@ namespace OBJECTS
         /// @return     The newly fired missile from the bunny.
         std::shared_ptr<OBJECTS::WEAPONS::Missile> FireMissile(const std::shared_ptr<sf::Sprite>& missileSprite);
 
+        /// @brief  Gets the number of lives the bunny has.
+        /// @return The bunny's number of lives.
+        uint8_t GetLives() const;
+
+        /// @brief  Causes the bunny to lose a life.
+        void LoseLife();
+
     private:
         /// @brief      Helper method for copying.
         /// @param[in]  bunnyToCopy - The bunny to copy.
         void Copy(const EasterBunny& bunnyToCopy);
 
         std::shared_ptr<sf::Sprite> m_sprite;   ///< The bunny's graphical sprite.
+        uint8_t m_lives;    ///< The number of lives of the bunny.
     };
 }

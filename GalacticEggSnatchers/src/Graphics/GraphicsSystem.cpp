@@ -51,3 +51,31 @@ std::shared_ptr<sf::Texture> GraphicsSystem::GetTexture(const std::string& filep
         return nullptr;
     }
 }
+
+std::shared_ptr<sf::Font> GraphicsSystem::GetFont(const std::string& filepath)
+{
+    // CHECK IF THIS SPECIFIED FONT HAS ALREADY BEEN LOADED.
+    auto preloadedFontResource = m_fonts.find(filepath);
+    bool fontAlreadyLoaded = (preloadedFontResource != m_fonts.end());
+    if (fontAlreadyLoaded)
+    {
+        // Return the already loaded font resource.
+        return preloadedFontResource->second;
+    }
+
+    // CREATE A TEXTURE FROM FILE.
+    std::shared_ptr<sf::Font> font = std::make_shared<sf::Font>();
+    bool fontLoaded = font->loadFromFile(filepath);
+    if (fontLoaded)
+    {
+        // Store the font in this object so that it persists in memory.
+        m_fonts[filepath] = font;
+
+        return font;
+    }
+    else
+    {
+        // No font could be loaded.
+        return nullptr;
+    }
+}

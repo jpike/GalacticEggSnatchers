@@ -3,12 +3,14 @@
 using namespace OBJECTS;
 
 // STATIC CONSTANTS.
+const uint8_t EasterBunny::DEFAULT_LIVES_COUNT = 3;
 const float EasterBunny::MOVE_SPEED_IN_PIXELS_PER_SECOND = 128.0f;
 
 // INSTANCE METHODS.
 
 EasterBunny::EasterBunny(const std::shared_ptr<sf::Sprite>& sprite) :
-    m_sprite(sprite)
+    m_sprite(sprite),
+    m_lives(DEFAULT_LIVES_COUNT)
 {
     // Nothing else to do.
 }
@@ -143,7 +145,23 @@ std::shared_ptr<OBJECTS::WEAPONS::Missile> EasterBunny::FireMissile(const std::s
     return bunnyMissile;
 }
 
+uint8_t EasterBunny::GetLives() const
+{
+    return m_lives;
+}
+
+void EasterBunny::LoseLife()
+{
+    // Only remove a life if at least one exists.
+    bool livesRemain = (m_lives > 0);
+    if (livesRemain)
+    {
+        --m_lives;
+    }
+}
+
 void EasterBunny::Copy(const EasterBunny& bunnyToCopy)
 {
     this->m_sprite = bunnyToCopy.m_sprite;
+    this->m_lives = bunnyToCopy.m_lives;
 }

@@ -3,6 +3,7 @@
 #include <list>
 #include <memory>
 #include <vector>
+#include "Graphics/Gui/GameplayHud.h"
 #include "Graphics/GraphicsSystem.h"
 #include "Input/IInputController.h"
 #include "Objects/AllObjects.h"
@@ -19,6 +20,8 @@ namespace STATES
     class GameplayState : public IGameState
     {
     public:
+        static const uint16_t DEFAULT_ALIEN_KILL_POINTS;    ///< The default number of points awarded for killing an alien.
+        
         /// @brief      Constructor.
         /// @param[in]  screenBoundsInPixels - The boundaries of the screen for which to confine game objects.
         explicit GameplayState(const sf::FloatRect& screenBoundsInPixels);
@@ -48,6 +51,9 @@ namespace STATES
         /// @brief  Creates the initial enemy aliens.
         /// @return The aliens in their initial state for a new gameplay session.
         std::list< std::shared_ptr<OBJECTS::Alien> > CreateInitialAliens();
+
+        /// @brief  Initializes the gameplay HUD.
+        void InitializeHud();
 
         /// @brief      Handles input for the player for a single update frame.
         /// @param[in]  playerController - The controller supplying input for the player.
@@ -81,8 +87,13 @@ namespace STATES
         /// @param[in,out]  renderTarget - The render target to render to.
         void RenderGameObjects(sf::RenderTarget& renderTarget);
 
+        /// @brief      Adds points to the score.
+        /// @param[in]  pointsToAdd - The number of points to add to the current score.
+        void AddToScore(const uint16_t pointsToAdd);
+
         // GRAPHICS MEMBER VARIABLES.
         GRAPHICS::GraphicsSystem m_graphicsSystem;  ///< The system that handles graphics resources.
+        std::shared_ptr<GRAPHICS::GUI::GameplayHud> m_gameplayHud;   ///< The HUD for the gameplay state.
         
         // COLLISION MEMBER VARIABLES.
         sf::FloatRect m_screenBoundsInPixels;   ///< The boundaries of the screen for which to confine game objects.
@@ -91,6 +102,10 @@ namespace STATES
         // INPUT MEMBER VARIABLES.
         std::shared_ptr<INPUT::IInputController> m_playerController;    ///< The controller supplying input for the player.
         sf::Clock m_bunnyMissileFiringClock;    ///< A clock for tracking how much time passes between the bunny firing a missile.
+
+        // GAMEPLAY STATISTICS.
+        uint16_t m_currentScore;    ///< The player's current score.
+        uint16_t m_highScore;   ///< The all-time high score.
 
         // GAME OBJECT MEMBER VARIABLES.
         std::shared_ptr<OBJECTS::EasterBunny> m_bunnyPlayer;    ///< The Easter bunny controlled by the player.

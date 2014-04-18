@@ -101,6 +101,10 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     <ClCompile Include="src\ArtificialIntelligence\AlienAiBrain.cpp" />
     <ClCompile Include="src\GalacticEggSnatchersGame.cpp" />
     <ClCompile Include="src\Graphics\GraphicsSystem.cpp" />
+    <ClCompile Include="src\Graphics\Gui\GameplayHud.cpp" />
+    <ClCompile Include="src\Graphics\Gui\HighScoreLabel.cpp" />
+    <ClCompile Include="src\Graphics\Gui\LivesLabel.cpp" />
+    <ClCompile Include="src\Graphics\Gui\ScoreLabel.cpp" />
     <ClCompile Include="src\Input\KeyboardController.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Objects\Alien.cpp" />
@@ -116,6 +120,10 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     <ClInclude Include="src\ArtificialIntelligence\AlienAiBrain.h" />
     <ClInclude Include="src\GalacticEggSnatchersGame.h" />
     <ClInclude Include="src\Graphics\GraphicsSystem.h" />
+    <ClInclude Include="src\Graphics\Gui\GameplayHud.h" />
+    <ClInclude Include="src\Graphics\Gui\HighScoreLabel.h" />
+    <ClInclude Include="src\Graphics\Gui\LivesLabel.h" />
+    <ClInclude Include="src\Graphics\Gui\ScoreLabel.h" />
     <ClInclude Include="src\Graphics\IRenderable.h" />
     <ClInclude Include="src\Input\IInputController.h" />
     <ClInclude Include="src\Input\KeyboardController.h" />

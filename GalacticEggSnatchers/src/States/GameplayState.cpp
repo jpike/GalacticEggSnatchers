@@ -7,12 +7,21 @@
 
 using namespace STATES;
 
+// STATIC CONSTANT INITIALIZATION.
+const uint16_t GameplayState::DEFAULT_ALIEN_KILL_POINTS = 100;
+
+
+// INSTANCE METHODS.
+
 GameplayState::GameplayState(const sf::FloatRect& screenBoundsInPixels) :
     m_graphicsSystem(),
+    m_gameplayHud(),
     m_screenBoundsInPixels(screenBoundsInPixels),
     m_collisionSystem(),
     m_playerController(),
     m_bunnyMissileFiringClock(),
+    m_currentScore(0),
+    m_highScore(0),
     m_bunnyPlayer(),
     m_easterEggs(),
     m_aliens(),
@@ -24,6 +33,9 @@ GameplayState::GameplayState(const sf::FloatRect& screenBoundsInPixels) :
     m_bunnyPlayer = CreateInitialBunnyPlayer();
     m_easterEggs = CreateInitialEasterEggs();
     m_aliens = CreateInitialAliens();
+
+    // INITIALIZE THE HUD.
+    InitializeHud();
 }
 
 
@@ -45,11 +57,16 @@ void GameplayState::Update(const sf::Time& elapsedTime)
 
     // HANDLE COLLISIONS WITH THE SCREEN BOUNDARIES.
     HandleScreenBoundaryCollisions(m_screenBoundsInPixels);
+
+    // UPDATE THE HUD.
+    /// @todo   Update the scores.
+    m_gameplayHud->SetLivesCount(m_bunnyPlayer->GetLives());
 }
 
 void GameplayState::Render(sf::RenderTarget& renderTarget)
 {
     RenderGameObjects(renderTarget);
+    m_gameplayHud->Render(renderTarget);
 }
 
 std::shared_ptr<OBJECTS::EasterBunny> GameplayState::CreateInitialBunnyPlayer()
@@ -74,7 +91,7 @@ std::shared_ptr<OBJECTS::EasterBunny> GameplayState::CreateInitialBunnyPlayer()
     float screenYBottom = static_cast<float>(GalacticEggSnatchersGame::SCREEN_HEIGHT_IN_PIXELS);
     float twoSpritesAboveScreenBottom = (bunnySprite->getLocalBounds().height * 2.0f);
     float initialYScreenPosition = (screenYBottom - twoSpritesAboveScreenBottom);
-        
+
     bunnySprite->setPosition(initialXScreenPosition, initialYScreenPosition);
 
     // CREATE THE BUNNY FOR THE PLAYER.
@@ -195,6 +212,23 @@ std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(
     }
 
     return initialAliens;
+}
+
+void GameplayState::InitializeHud()
+{
+    // LOAD THE FONT RESOURCE.
+    /// @todo   This needs to be updated once we have an actual font.  Until then
+    ///         the code submitted to version control won't really run since the font
+    ///         won't be committed.
+    std::shared_ptr<sf::Font> hudFont = m_graphicsSystem.GetFont("res/visitor1.ttf");
+    bool fontLoaded = (nullptr != hudFont);
+    if (!fontLoaded)
+    {
+        throw std::runtime_error("Error loading HUD font.");
+    }
+
+    // INITIALIZE THE GAMEPLAY HUD.
+    m_gameplayHud = std::make_shared<GRAPHICS::GUI::GameplayHud>(m_screenBoundsInPixels, hudFont);
 }
 
 void GameplayState::HandleInput(const INPUT::IInputController& playerController, const sf::Time& elapsedTime)
@@ -380,6 +414,8 @@ bool GameplayState::HandleAlienMissileCollisions(const OBJECTS::WEAPONS::Missile
     if (missileHitBunny)
     {
         collidedObjectRectangle = bunnyBounds;
+
+        m_bunnyPlayer->LoseLife();
     }
 
     return missileHitBunny;
@@ -411,6 +447,10 @@ bool GameplayState::HandleBunnyMissileCollisions(const OBJECTS::WEAPONS::Missile
             
             // Remove the alien itself so that it is no longer updated.
             alien = m_aliens.erase(alien);
+
+            // Add points to the player's score for killing the alien.
+            AddToScore(DEFAULT_ALIEN_KILL_POINTS);
+
             return true;
         }
         else
@@ -495,4 +535,12 @@ void GameplayState::RenderGameObjects(sf::RenderTarget& renderTarget)
     {
         explosion->Render(renderTarget);
     }
+}
+
+void GameplayState::AddToScore(const uint16_t pointsToAdd)
+{
+    m_currentScore += pointsToAdd;
+    m_gameplayHud->SetScore(m_currentScore);
+    /// @todo   Check if the high score has been exceeded and should be replaced with
+    ///         the current score.
 }
