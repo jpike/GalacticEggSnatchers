@@ -78,6 +78,10 @@ namespace WEAPONS
         /// @copydoc    IRenderable::Render(sf::RenderTarget& renderTarget)
         virtual void Render(sf::RenderTarget& renderTarget);
 
+        /// @brief  Gets the type of the source that fired this missile.
+        /// @return The source of this missile.
+        MissileSource GetMissileSource() const;
+
     private:
         /// @brief      Helper method for copying.
         /// @param[in]  missileToCopy - The missile to copy.

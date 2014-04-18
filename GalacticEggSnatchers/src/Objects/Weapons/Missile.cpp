@@ -104,6 +104,11 @@ void Missile::Render(sf::RenderTarget& renderTarget)
     renderTarget.draw(*m_sprite);
 }
 
+MissileSource Missile::GetMissileSource() const
+{
+    return m_source;
+}
+
 void Missile::Copy(const Missile& missileToCopy)
 {
     this->m_source = missileToCopy.m_source;

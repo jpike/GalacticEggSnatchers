@@ -58,6 +58,21 @@ namespace STATES
         /// @param[in]  elapsedTime - The elapsed time since the last frame of updating.
         void UpdateGameObjects(const sf::Time& elapsedTime);
 
+        /// @brief  Handles collisions between game objects.
+        void HandleGameObjectCollisions();
+        
+        /// @brief          Handles collisions of the provided alien-sourced missile with any non-alien game objects.
+        /// @param[in]      missile - The missile, assumed to have been fired by an alien, for which to handle collisions.
+        /// @param[in,out]  collidedObjectRectangle - The bounding rectangle of the collided object, if any.
+        /// @return         True if the missile collided with anything; false otherwise.
+        bool HandleAlienMissileCollisions(const OBJECTS::WEAPONS::Missile& missile, sf::FloatRect& collidedObjectRectangle);
+
+        /// @brief          Handles collisions of the provided bunny-sourced missile with any alien game objects.
+        /// @param[in]      missile - The missile, assumed to have been fired by the bunny, for which to handle collisions.
+        /// @param[in,out]  collidedObjectRectangle - The bounding rectangle of the collided object, if any.
+        /// @return         True if the missile collided with anything; false otherwise.
+        bool HandleBunnyMissileCollisions(const OBJECTS::WEAPONS::Missile& missile, sf::FloatRect& collidedObjectRectangle);
+
         /// @brief      Handles screen boundary collisions for game objects in this state.
         /// @param[in]  screenBoundsInPixels - The boundaries of the screen for which to confine game objects.
         void HandleScreenBoundaryCollisions(const sf::FloatRect& screenBoundsInPixels);
@@ -82,5 +97,6 @@ namespace STATES
         std::vector< std::shared_ptr<OBJECTS::EasterEgg> > m_easterEggs;    ///< The Easter eggs to be protected by the player.
         std::list< std::shared_ptr<OBJECTS::Alien> > m_aliens;  ///< The enemy aliens attempting to abduct Easter eggs.
         std::list< std::shared_ptr<OBJECTS::WEAPONS::Missile> > m_missiles;  ///< The missiles fired by the player or enemies.
+        std::list< std::shared_ptr<OBJECTS::Explosion> > m_explosions;    ///< Explosions created from missile collisions.
     };
 }

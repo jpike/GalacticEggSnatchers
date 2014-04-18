@@ -6,4 +6,5 @@
 #include "Objects/Alien.h"
 #include "Objects/EasterBunny.h"
 #include "Objects/EasterEgg.h"
+#include "Objects/Explosion.h"
 #include "Objects/Weapons/Missile.h"

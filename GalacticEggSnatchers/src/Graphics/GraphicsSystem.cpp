@@ -24,9 +24,20 @@ std::shared_ptr<sf::Texture> GraphicsSystem::GetTexture(const std::string& filep
         return preloadedTextureResource->second;
     }
 
-    // LOAD THE TEXTURE FROM FILE.
+    // LOAD THE TEXTURE IMAGE FROM FILE.
+    std::shared_ptr<sf::Image> textureImage = std::make_shared<sf::Image>();
+    bool imageLoaded = textureImage->loadFromFile(filepath);
+    if (!imageLoaded)
+    {
+        return nullptr;
+    }
+    // Set the standard transparent color for the images.
+    const sf::Color TRANSPARENT_COLOR = sf::Color::Magenta;
+    textureImage->createMaskFromColor(TRANSPARENT_COLOR);
+
+    // CREATE A TEXTURE FROM THE IMAGE.
     std::shared_ptr<sf::Texture> texture = std::make_shared<sf::Texture>();
-    bool textureLoaded = texture->loadFromFile(filepath);
+    bool textureLoaded = texture->loadFromImage(*textureImage);
     if (textureLoaded)
     {
         // Store the texture in this object so that it persists in memory.
@@ -36,13 +47,6 @@ std::shared_ptr<sf::Texture> GraphicsSystem::GetTexture(const std::string& filep
     }
     else
     {
-        /// @todo Once all texture resources have been created, this should 
-        // return nullptr, not a blank texture.
-        const int DUMMY_TEXTURE_SIZE = 32;
-        texture->create(DUMMY_TEXTURE_SIZE, DUMMY_TEXTURE_SIZE);
-        m_textures[filepath] = texture;
-        return texture;
-
         // No texture could be loaded.
         return nullptr;
     }

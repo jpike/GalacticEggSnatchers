@@ -12,7 +12,7 @@ CollisionSystem::~CollisionSystem()
     // Nothing to do.
 }
 
-bool CollisionSystem::HandleBoundaryCollisions(const sf::FloatRect& boundsInPixels, ICollidable& collidableObject)
+bool CollisionSystem::HandleBoundaryCollisions(const sf::FloatRect& boundsInPixels, ICollidable& collidableObject) const
 {
     // HANDLE COLLISIONS FOR THE OBJECT.
     // It is only expected that an object can exceed one of the boundaries at a time,

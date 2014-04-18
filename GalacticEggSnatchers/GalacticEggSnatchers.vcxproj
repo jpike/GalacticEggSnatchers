@@ -98,27 +98,33 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ArtificialIntelligence\AlienAiBrain.cpp" />
     <ClCompile Include="src\GalacticEggSnatchersGame.cpp" />
     <ClCompile Include="src\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="src\Input\KeyboardController.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Objects\Alien.cpp" />
+    <ClCompile Include="src\Objects\AlienFactory.cpp" />
     <ClCompile Include="src\Objects\EasterBunny.cpp" />
     <ClCompile Include="src\Objects\EasterEgg.cpp" />
+    <ClCompile Include="src\Objects\Explosion.cpp" />
     <ClCompile Include="src\Objects\Weapons\Missile.cpp" />
     <ClCompile Include="src\Physics\Collisions\CollisionSystem.cpp" />
     <ClCompile Include="src\States\GameplayState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ArtificialIntelligence\AlienAiBrain.h" />
     <ClInclude Include="src\GalacticEggSnatchersGame.h" />
     <ClInclude Include="src\Graphics\GraphicsSystem.h" />
     <ClInclude Include="src\Graphics\IRenderable.h" />
     <ClInclude Include="src\Input\IInputController.h" />
     <ClInclude Include="src\Input\KeyboardController.h" />
     <ClInclude Include="src\Objects\Alien.h" />
+    <ClInclude Include="src\Objects\AlienFactory.h" />
     <ClInclude Include="src\Objects\AllObjects.h" />
     <ClInclude Include="src\Objects\EasterBunny.h" />
     <ClInclude Include="src\Objects\EasterEgg.h" />
+    <ClInclude Include="src\Objects\Explosion.h" />
     <ClInclude Include="src\Objects\IGameObject.h" />
     <ClInclude Include="src\Objects\Weapons\Missile.h" />
     <ClInclude Include="src\Physics\Collisions\CollisionSystem.h" />
@@ -131,8 +137,13 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     <ClInclude Include="src\States\TitleState.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\Images\alien1.png" />
+    <Image Include="res\Images\alien2.png" />
+    <Image Include="res\Images\alienMissile1.png" />
     <Image Include="res\Images\bunny.png" />
     <Image Include="res\Images\carrot.png" />
+    <Image Include="res\Images\easterEgg1.png" />
+    <Image Include="res\Images\explosion1.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

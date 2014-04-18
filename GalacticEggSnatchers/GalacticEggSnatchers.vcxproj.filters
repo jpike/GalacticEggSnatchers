@@ -58,6 +58,12 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{c86334f3-e2c3-4072-b5c7-f550af03ade9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ArtificialIntelligence">
+      <UniqueIdentifier>{1e55c57c-4630-4f1e-9e49-ebd0757ab6aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ArtificialIntelligence">
+      <UniqueIdentifier>{e1d94294-2880-4942-982f-8b2949632c52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -89,6 +95,15 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\GraphicsSystem.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Objects\AlienFactory.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ArtificialIntelligence\AlienAiBrain.cpp">
+      <Filter>Source Files\ArtificialIntelligence</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Objects\Explosion.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,12 +164,36 @@
     <ClInclude Include="src\Graphics\IRenderable.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Objects\AlienFactory.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ArtificialIntelligence\AlienAiBrain.h">
+      <Filter>Header Files\ArtificialIntelligence</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Objects\Explosion.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Images\bunny.png">
       <Filter>Resource Files\Images</Filter>
     </Image>
     <Image Include="res\Images\carrot.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\Images\alien1.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\Images\alien2.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\Images\easterEgg1.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\Images\alienMissile1.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\Images\explosion1.png">
       <Filter>Resource Files\Images</Filter>
     </Image>
   </ItemGroup>

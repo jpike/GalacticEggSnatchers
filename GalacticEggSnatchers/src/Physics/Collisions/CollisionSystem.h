@@ -27,7 +27,7 @@ namespace COLLISIONS
         /// @param[in]      boundsInPixels - The boundaries for which to confine the object.
         /// @param[in,out]  collidableObject - The object for which to handle boundary collisions.
         /// @return         True if the object collided with a boundary; false otherwise.
-        bool HandleBoundaryCollisions(const sf::FloatRect& boundsInPixels, ICollidable& collidableObject);
+        bool HandleBoundaryCollisions(const sf::FloatRect& boundsInPixels, ICollidable& collidableObject) const;
 
     private:
         CollisionSystem(const CollisionSystem& systemToCopy);   ///< Private to disallow copying.
