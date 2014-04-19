@@ -1,0 +1,7 @@
+This document describes the general requirements for assets to be used in the game, in the event that anyone wishes to contribute.
+
+Art: The art will be pretty simple.  Nothing more complicated than 8-bit style is needed, and "single color" art like the original Space Invaders is fine.  Sprite frames should be 32x32 pixels, although as long as they are designed with that size in mine, smaller art may be acceptable.  RGB color 255,0,255 (all red, no green, all blue) is reserved for transparency.  Files should be in .png format.
+
+Sound: SFML supports the following sound formats: ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam, w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.  I don't have any particularly preference (or deep knowledge) about all of these formats, so whatever format you can make (if it is in the list above) will probably work (by default, go with wav if you don't have any particular ideas).  I'm guessing basic 8-bit arcade (or less) complexity for sound, but I'm open to other ideas.  Both sound effects and background music could be useful.
+
+Font: One other thing that would be nice would be to have some kind of "unique" font for the game, likely similar to old-school arcade fonts. If anyone is interested in making a font (or even finding a free font with an appropriate license), that would be nice. SFML supports the following font types: TrueType, Type 1, CFF, OpenType, SFNT, X11 PCF, Windows FNT, BDF, PFR and Type 42.
