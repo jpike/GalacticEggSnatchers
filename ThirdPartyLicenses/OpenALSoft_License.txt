@@ -1,0 +1,1 @@
+OpenAL Soft, used by SFML and distributed in binary dll form, is licensed using the LGPL: http://www.gnu.org/copyleft/lesser.html
