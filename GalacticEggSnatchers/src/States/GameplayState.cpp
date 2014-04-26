@@ -5,6 +5,7 @@
 #include "Objects/AlienFactory.h"
 #include "Objects/EasterEggFactory.h"
 #include "States/GameplayState.h"
+#include <iostream>
 
 using namespace STATES;
 
@@ -425,6 +426,48 @@ void GameplayState::HandleGameObjectCollisions()
             ++missile;
         }
     }
+
+    // CHECK FOR COLLISIONS OF THE ALIENS WITH THE EASTER EGGS OR PLAYER.
+    for (auto alien : m_aliens)
+    {
+        sf::FloatRect alienBounds = alien->GetBoundingRectangle();
+
+        // CHECK IF THE ALIEN COLLIDED WITH THE EASTER BUNNY.
+        sf::FloatRect bunnyBounds = m_bunnyPlayer->GetBoundingRectangle();
+        bool alienHitBunny = alienBounds.intersects(bunnyBounds);
+        if (alienHitBunny)
+        {
+            m_bunnyPlayer->LoseLife();
+        }
+
+        // CHECK IF THE ALIEN COLLIDED WITH ANY EASTER EGGS.
+        // We don't automatically increment the iterator during the for loop because we may need to
+        // erase from the container during the loop for eggs that have lost all health.
+        for (auto easterEgg = m_easterEggs.begin(); easterEgg != m_easterEggs.end();)
+        {
+            // Check if the alien hit an egg.
+            sf::FloatRect eggBounds = (*easterEgg)->GetBoundingRectangle();
+            bool alienHitEgg = alienBounds.intersects(eggBounds);
+            if (alienHitEgg)
+            {
+                (*easterEgg)->LoseHealth();
+
+                // Check if the alien killed the egg.
+                uint8_t eggHealth = (*easterEgg)->GetHealth();
+                bool eggAlive = (eggHealth > 0);
+                if (!eggAlive)
+                {            
+                    // Remove the egg so that it is no longer updated.
+                    easterEgg = m_easterEggs.erase(easterEgg);
+                }
+            }
+            else
+            {
+                // Move to the checking collisions for the next egg.
+                ++easterEgg;
+            }
+        }
+    }
 }
 
 bool GameplayState::HandleAlienMissileCollisions(const OBJECTS::WEAPONS::Missile& missile,  sf::FloatRect& collidedObjectRectangle)
@@ -437,10 +480,40 @@ bool GameplayState::HandleAlienMissileCollisions(const OBJECTS::WEAPONS::Missile
         return false;
     }
 
-    /// @todo CHECK IF THE MISSILE COLLIDED WITH ANY EASTER EGGS.
+    // CHECK IF THE MISSILE COLLIDED WITH ANY EASTER EGGS.
+    sf::FloatRect missileBounds = missile.GetBoundingRectangle();
+    // We don't automatically increment the iterator during the for loop because we may need to
+    // erase from the container during the loop for eggs that have lost all health.
+    for (auto easterEgg = m_easterEggs.begin(); easterEgg != m_easterEggs.end();)
+    {
+        // Check if the missile hit an egg.
+        sf::FloatRect eggBounds = (*easterEgg)->GetBoundingRectangle();
+        bool missileHitEgg = missileBounds.intersects(eggBounds);
+        if (missileHitEgg)
+        {
+            collidedObjectRectangle = eggBounds;
+
+            (*easterEgg)->LoseHealth();
+
+            // Check if the missile killed the egg.
+            uint8_t eggHealth = (*easterEgg)->GetHealth();
+            bool eggAlive = (eggHealth > 0);
+            if (!eggAlive)
+            {            
+                // Remove the egg so that it is no longer updated.
+                easterEgg = m_easterEggs.erase(easterEgg);
+            }
+
+            return true;
+        }
+        else
+        {
+            // Move to the checking collisions for the next egg.
+            ++easterEgg;
+        }
+    }
 
     // CHECK IF THE MISSILE COLLIDED WITH THE EASTER BUNNY.
-    sf::FloatRect missileBounds = missile.GetBoundingRectangle();
     sf::FloatRect bunnyBounds = m_bunnyPlayer->GetBoundingRectangle();
     bool missileHitBunny = missileBounds.intersects(bunnyBounds);
     if (missileHitBunny)

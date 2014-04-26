@@ -1,9 +1,11 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "Graphics/IRenderable.h"
 #include "Objects/IGameObject.h"
+#include "Physics/Collisions/ICollidable.h"
 
 namespace OBJECTS
 {
@@ -13,9 +15,11 @@ namespace OBJECTS
     ///
     /// @todo   Remove the copy constructor and assignment operator if they aren't needed.
     ////////////////////////////////////////////////////////
-    class EasterEgg : public IGameObject, public GRAPHICS::IRenderable
+    class EasterEgg : public IGameObject, public GRAPHICS::IRenderable, public PHYSICS::COLLISIONS::ICollidable
     {
     public:
+        static const uint8_t DEFAULT_HEALTH;   ///< The default amount of health for an egg.
+        
         /// @brief  Constructor.  Resources provided via the constructor
         ///         may be modified by this object during its lifetime.
         /// @param  sprite - The graphical sprite for this egg.
@@ -39,11 +43,38 @@ namespace OBJECTS
         /// @copydoc    IRenderable::Render(sf::RenderTarget& renderTarget)
         virtual void Render(sf::RenderTarget& renderTarget);
 
+        /// @copydoc    ICollidable::GetBoundingRectangle() const
+        virtual sf::FloatRect GetBoundingRectangle() const;
+
+        /// @copydoc    ICollidable::SetTopPosition(const float topPositionInPixels)
+        virtual void SetTopPosition(const float topPositionInPixels);
+
+        /// @copydoc    ICollidable::SetBottomPosition(const float bottomPositionInPixels)
+        virtual void SetBottomPosition(const float bottomPositionInPixels);
+
+        /// @copydoc    ICollidable::SetLeftPosition(const float leftPositionInPixels)
+        virtual void SetLeftPosition(const float leftPositionInPixels);
+
+        /// @copydoc    ICollidable::SetRightPosition(const float rightPositionInPixels)
+        virtual void SetRightPosition(float rightPositionInPixels);
+
+        /// @copydoc    ICollidable::OnWorldBoundaryCollide()
+        /// @brief      Does nothing for the egg.
+        virtual void OnWorldBoundaryCollide();
+
+        /// @brief  Gets the egg's current health.
+        /// @return The egg's health.
+        uint8_t GetHealth() const;
+        
+        /// @brief  Causes the egg to lose a unit of health.
+        void LoseHealth();
+
     private:
         /// @brief      Helper method for copying.
         /// @param[in]  eggToCopy - The egg to copy.
         void Copy(const EasterEgg& eggToCopy);
 
+        uint8_t m_health;  ///< The current health of the egg.
         std::shared_ptr<sf::Sprite> m_sprite;   ///< The egg's graphical sprite.
     };
 }
