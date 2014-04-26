@@ -115,7 +115,9 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     <ClCompile Include="src\Objects\Weapons\Missile.cpp" />
     <ClCompile Include="src\Physics\Collisions\CollisionSystem.cpp" />
     <ClCompile Include="src\Resources\ResourceManager.cpp" />
+    <ClCompile Include="src\States\CreditsState.cpp" />
     <ClCompile Include="src\States\GameplayState.cpp" />
+    <ClCompile Include="src\States\TitleState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ArtificialIntelligence\AlienAiBrain.h" />

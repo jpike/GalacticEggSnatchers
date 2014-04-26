@@ -29,11 +29,20 @@ namespace STATES
         /// @brief  Destructor.
         virtual ~GameplayState();
 
+        /// @copydoc    IGameState::GetStateType() const
+        virtual GameStateType GetStateType() const;
+
+        /// @copydoc    IGameState::GetNextState() const
+        virtual GameStateType GetNextState() const;
+
         /// @copydoc    IGameState::Update(const sf::Time& elapsedTime)
         virtual void Update(const sf::Time& elapsedTime);
 
         /// @copydoc    IGameState::Render(sf::RenderTarget& renderTarget)
         virtual void Render(sf::RenderTarget& renderTarget);
+
+        /// @copydoc    IGameState::HandleKeyPress(const sf::Keyboard::Key key)
+        virtual void HandleKeyPress(const sf::Keyboard::Key key);
 
     private:
         GameplayState(const GameplayState& stateToCopy);    ///< Private to disallow copying.

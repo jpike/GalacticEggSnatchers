@@ -32,12 +32,24 @@ public:
     /// @param[in,out]  renderTarget - The render target to render to.
     void Render(sf::RenderTarget& renderTarget);
 
+    /// @brief      Handles a key being pressed.
+    /// @param[in]  key - The key that was pressed.
+    void HandleKeyPress(const sf::Keyboard::Key key);
+
 private:
     GalacticEggSnatchersGame(const GalacticEggSnatchersGame& gameToCopy);   ///< Private to disallow copying.
     GalacticEggSnatchersGame& operator= (const GalacticEggSnatchersGame& rhsGame);  ///< Private to disallow assignment.
 
+    /// @brief  Helper method to get the screen bounds in pixels.
+    /// @return The screen bounds in pixels.
+    sf::FloatRect GetScreenBoundsInPixels() const;
+
     /// @brief  Helper method to initialize the first state of the game.
     void InitializeFirstGameState();
+
+    /// @brief      Switches the game to the specified next state.
+    /// @param[in]  nextStateType - The type of the state to switch to.
+    void SwitchToNextGameState(const STATES::GameStateType nextStateType);
 
     std::stack< std::shared_ptr<STATES::IGameState> > m_gameStates; ///< The states in the game, with the current state on top.
 };

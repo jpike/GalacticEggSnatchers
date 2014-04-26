@@ -46,6 +46,18 @@ GameplayState::~GameplayState()
     // Nothing else to do.
 }
 
+GameStateType GameplayState::GetStateType() const
+{
+    return GAME_STATE_TYPE_GAMEPLAY;
+}
+
+GameStateType GameplayState::GetNextState() const
+{
+    /// @todo   Update this to a different value once we support switching to different
+    ///         states from the current state.
+    return GAME_STATE_TYPE_INVALID;
+}
+
 void GameplayState::Update(const sf::Time& elapsedTime)
 {
     // HANDLE USER INPUT.
@@ -69,6 +81,11 @@ void GameplayState::Render(sf::RenderTarget& renderTarget)
 {
     RenderGameObjects(renderTarget);
     m_gameplayHud->Render(renderTarget);
+}
+
+void GameplayState::HandleKeyPress(const sf::Keyboard::Key key)
+{
+    // Nothing to do yet for this state.
 }
 
 std::shared_ptr<OBJECTS::EasterBunny> GameplayState::CreateInitialBunnyPlayer()

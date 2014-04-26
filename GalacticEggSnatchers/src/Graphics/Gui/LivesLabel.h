@@ -45,7 +45,6 @@ namespace GUI
         LivesLabel& operator= (const LivesLabel& rhsLabel); ///< Private to disallow assignment.
 
         sf::Text m_labelText;   ///< The text displayed in the label.
-        sf::Font m_font;
     };
 }
 }

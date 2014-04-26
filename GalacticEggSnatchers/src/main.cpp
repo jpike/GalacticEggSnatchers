@@ -35,6 +35,9 @@ int main(int argumentCount, char* arguments[])
                 case sf::Event::Closed:
                     window.close();
                     break;
+                case sf::Event::KeyPressed:
+                    game.HandleKeyPress(event.key.code);
+                    break;
                 }
             }
 
