@@ -1,19 +1,21 @@
-#include "Graphics/GraphicsSystem.h"
+#include "Resources/ResourceManager.h"
 
-using namespace GRAPHICS;
+using namespace RESOURCES;
 
-GraphicsSystem::GraphicsSystem() :
-    m_textures()
+ResourceManager::ResourceManager() :
+    m_textures(),
+    m_fonts(),
+    m_sounds()
 {
     // Nothing to do.
 }
 
-GraphicsSystem::~GraphicsSystem()
+ResourceManager::~ResourceManager()
 {
     // Nothing to do.
 }
 
-std::shared_ptr<sf::Texture> GraphicsSystem::GetTexture(const std::string& filepath)
+std::shared_ptr<sf::Texture> ResourceManager::GetTexture(const std::string& filepath)
 {
     // CHECK IF THIS SPECIFIED TEXTURE HAS ALREADY BEEN LOADED.
     auto preloadedTextureResource = m_textures.find(filepath);
@@ -52,7 +54,7 @@ std::shared_ptr<sf::Texture> GraphicsSystem::GetTexture(const std::string& filep
     }
 }
 
-std::shared_ptr<sf::Font> GraphicsSystem::GetFont(const std::string& filepath)
+std::shared_ptr<sf::Font> ResourceManager::GetFont(const std::string& filepath)
 {
     // CHECK IF THIS SPECIFIED FONT HAS ALREADY BEEN LOADED.
     auto preloadedFontResource = m_fonts.find(filepath);
@@ -63,7 +65,7 @@ std::shared_ptr<sf::Font> GraphicsSystem::GetFont(const std::string& filepath)
         return preloadedFontResource->second;
     }
 
-    // CREATE A TEXTURE FROM FILE.
+    // CREATE A FONT FROM FILE.
     std::shared_ptr<sf::Font> font = std::make_shared<sf::Font>();
     bool fontLoaded = font->loadFromFile(filepath);
     if (fontLoaded)
@@ -76,6 +78,34 @@ std::shared_ptr<sf::Font> GraphicsSystem::GetFont(const std::string& filepath)
     else
     {
         // No font could be loaded.
+        return nullptr;
+    }
+}
+
+std::shared_ptr<sf::SoundBuffer> ResourceManager::GetSoundBuffer(const std::string& filepath)
+{
+    // CHECK IF THIS SPECIFIED SOUND BUFFER HAS ALREADY BEEN LOADED.
+    auto preloadedSoundResource = m_sounds.find(filepath);
+    bool soundAlreadyLoaded = (preloadedSoundResource != m_sounds.end());
+    if (soundAlreadyLoaded)
+    {
+        // Return the already loaded sound resource.
+        return preloadedSoundResource->second;
+    }
+
+    // CREATE A SOUND BUFFER FROM FILE.
+    std::shared_ptr<sf::SoundBuffer> soundBuffer = std::make_shared<sf::SoundBuffer>();
+    bool soundLoaded = soundBuffer->loadFromFile(filepath);
+    if (soundLoaded)
+    {
+        // Store the sound in this object so that it persists in memory.
+        m_sounds[filepath] = soundBuffer;
+
+        return soundBuffer;
+    }
+    else
+    {
+        // No sound buffer could be loaded.
         return nullptr;
     }
 }

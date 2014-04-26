@@ -16,9 +16,13 @@ namespace GUI
     {
     public:
         /// @brief      Constructor.
+        /// @param[in]  fontSizeInPixels - The size of the font in pixels.
         /// @param[in]  textColor - The color for the label's text.
         /// @param[in]  font - The font for the label's text.
-        explicit HighScoreLabel(const sf::Color& textColor, const std::shared_ptr<sf::Font>& font);
+        explicit HighScoreLabel(
+            const unsigned int fontSizeInPixels, 
+            const sf::Color& textColor, 
+            const std::shared_ptr<sf::Font>& font);
 
         /// @brief  Destructor.
         ~HighScoreLabel();

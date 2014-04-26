@@ -4,13 +4,16 @@
 
 using namespace GRAPHICS::GUI;
 
+// 12px was recommended by the creator of the font.  It also seems large enough to fit
+// everything on the screen without odd size or position adjustments.
+const unsigned int GameplayHud::DEFAULT_FONT_SIZE_IN_PIXELS = 12;
 // White ensures that the text can be seen against the black screen background.
 const sf::Color GameplayHud::DEFAULT_TEXT_COLOR = sf::Color::White;
 
 GameplayHud::GameplayHud(const sf::FloatRect& screenBoundsInPixels, const std::shared_ptr<sf::Font>& textFont) :
-    m_livesLabel(DEFAULT_TEXT_COLOR, textFont),
-    m_scoreLabel(DEFAULT_TEXT_COLOR, textFont),
-    m_highScoreLabel(DEFAULT_TEXT_COLOR, textFont)
+    m_livesLabel(DEFAULT_FONT_SIZE_IN_PIXELS, DEFAULT_TEXT_COLOR, textFont),
+    m_scoreLabel(DEFAULT_FONT_SIZE_IN_PIXELS, DEFAULT_TEXT_COLOR, textFont),
+    m_highScoreLabel(DEFAULT_FONT_SIZE_IN_PIXELS, DEFAULT_TEXT_COLOR, textFont)
 {
     // POSITION EACH OF THE LABELS.
     PositionLabels(screenBoundsInPixels);

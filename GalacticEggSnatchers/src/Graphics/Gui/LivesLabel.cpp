@@ -3,17 +3,18 @@
 
 using namespace GRAPHICS::GUI;
 
-LivesLabel::LivesLabel(const sf::Color& textColor, const std::shared_ptr<sf::Font>& font) :
+LivesLabel::LivesLabel(
+    const unsigned int fontSizeInPixels, 
+    const sf::Color& textColor, 
+    const std::shared_ptr<sf::Font>& font) :
     m_labelText()
 {    
     // Initialize the lives to 0.
     SetLivesCount(0);
 
+    m_labelText.setCharacterSize(fontSizeInPixels);
     m_labelText.setColor(textColor);
     m_labelText.setFont(*font);
-
-    /// @todo Remove or alter the setting of the text size here once we have a final font.
-    m_labelText.setCharacterSize(14);
 }
 
 LivesLabel::~LivesLabel()

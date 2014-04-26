@@ -3,6 +3,7 @@
 #include "Graphics/IRenderable.h"
 #include "Input/KeyboardController.h"
 #include "Objects/AlienFactory.h"
+#include "Objects/EasterEggFactory.h"
 #include "States/GameplayState.h"
 
 using namespace STATES;
@@ -14,7 +15,7 @@ const uint16_t GameplayState::DEFAULT_ALIEN_KILL_POINTS = 100;
 // INSTANCE METHODS.
 
 GameplayState::GameplayState(const sf::FloatRect& screenBoundsInPixels) :
-    m_graphicsSystem(),
+    m_resourceManager(),
     m_gameplayHud(),
     m_screenBoundsInPixels(screenBoundsInPixels),
     m_collisionSystem(),
@@ -73,7 +74,7 @@ std::shared_ptr<OBJECTS::EasterBunny> GameplayState::CreateInitialBunnyPlayer()
 {
     // LOAD THE TEXTURE FOR THE BUNNY.
     const std::string BUNNY_TEXTURE_FILEPATH = "res/Images/bunny.png";
-    std::shared_ptr<sf::Texture> bunnyTexture = m_graphicsSystem.GetTexture(BUNNY_TEXTURE_FILEPATH);
+    std::shared_ptr<sf::Texture> bunnyTexture = m_resourceManager.GetTexture(BUNNY_TEXTURE_FILEPATH);
     bool bunnyTextureLoaded = (nullptr != bunnyTexture);
     if (!bunnyTextureLoaded)
     {
@@ -108,10 +109,8 @@ std::vector< std::shared_ptr<OBJECTS::EasterEgg> > GameplayState::CreateInitialE
     for (unsigned int currentEasterEggCount = 0; currentEasterEggCount < INITIAL_EASTER_EGG_COUNT; ++currentEasterEggCount)
     {
         // LOAD THE TEXTURE FOR THE EASTER EGG.
-        /// @todo   If multiple Easter eggs are created, then we need to create some kind of factory to
-        ///         load random eggs.
-        const std::string EGG_TEXTURE_FILEPATH = "res/Images/easterEgg1.png";
-        std::shared_ptr<sf::Texture> eggTexture = m_graphicsSystem.GetTexture(EGG_TEXTURE_FILEPATH);
+        const std::string EGG_TEXTURE_FILEPATH = OBJECTS::EasterEggFactory::GetRandomEggTextureFilepath();
+        std::shared_ptr<sf::Texture> eggTexture = m_resourceManager.GetTexture(EGG_TEXTURE_FILEPATH);
         bool eggTextureLoaded = (nullptr != eggTexture);
         if (!eggTextureLoaded)
         {
@@ -148,6 +147,15 @@ std::vector< std::shared_ptr<OBJECTS::EasterEgg> > GameplayState::CreateInitialE
 
 std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens()
 {
+    // LOAD THE MISSILE SOUND DATA FOR ALIENS.
+    const std::string MISSILE_SOUND_FILEPATH = "res/Sounds/MissileLaunch.wav";
+    std::shared_ptr<sf::SoundBuffer> missileSoundBuffer = m_resourceManager.GetSoundBuffer(MISSILE_SOUND_FILEPATH);
+    bool missileSoundBufferLoaded = (nullptr != missileSoundBuffer);
+    if (!missileSoundBufferLoaded)
+    {
+        throw std::runtime_error("Error loading missile sound.");
+    }
+    
     // CREATE A 2D GRID OF ALIENS.
     // The number of aliens may be adjusted later depending on spacing/gameplay experience.
     const unsigned int ALIEN_ROW_COUNT = 5;
@@ -161,7 +169,7 @@ std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(
             // LOAD THE TEXTURE FOR THE ALIEN.
             // Select a random texture to provide variety during gameplay.
             std::string alienTextureFilepath = OBJECTS::AlienFactory::GetRandomAlienTextureFilepath();
-            std::shared_ptr<sf::Texture> alienTexture = m_graphicsSystem.GetTexture(alienTextureFilepath);
+            std::shared_ptr<sf::Texture> alienTexture = m_resourceManager.GetTexture(alienTextureFilepath);
             bool alienTextureLoaded = (nullptr != alienTexture);
             if (!alienTextureLoaded)
             {
@@ -198,7 +206,7 @@ std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(
 
             // LOAD THE ALIEN MISSILE TEXTURE.
             const std::string ALIEN_MISSILE_TEXTURE_FILEPATH = "res/Images/alienMissile1.png";
-            std::shared_ptr<sf::Texture> alienMissileTexture = m_graphicsSystem.GetTexture(ALIEN_MISSILE_TEXTURE_FILEPATH);;
+            std::shared_ptr<sf::Texture> alienMissileTexture = m_resourceManager.GetTexture(ALIEN_MISSILE_TEXTURE_FILEPATH);;
             bool alienMissileTextureLoaded = (nullptr != alienMissileTexture);
             if (!alienMissileTextureLoaded)
             {
@@ -206,7 +214,10 @@ std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(
             }
 
             // CREATE THE ALIEN.
-            std::shared_ptr<OBJECTS::Alien> alien = std::make_shared<OBJECTS::Alien>(alienSprite, alienMissileTexture);
+            std::shared_ptr<OBJECTS::Alien> alien = std::make_shared<OBJECTS::Alien>(
+                alienSprite, 
+                alienMissileTexture,
+                missileSoundBuffer);
             initialAliens.push_back(alien);
         }
     }
@@ -217,10 +228,7 @@ std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(
 void GameplayState::InitializeHud()
 {
     // LOAD THE FONT RESOURCE.
-    /// @todo   This needs to be updated once we have an actual font.  Until then
-    ///         the code submitted to version control won't really run since the font
-    ///         won't be committed.
-    std::shared_ptr<sf::Font> hudFont = m_graphicsSystem.GetFont("res/visitor1.ttf");
+    std::shared_ptr<sf::Font> hudFont = m_resourceManager.GetFont("res/Fonts/Minecraftia.ttf");
     bool fontLoaded = (nullptr != hudFont);
     if (!fontLoaded)
     {
@@ -266,7 +274,7 @@ void GameplayState::HandleInput(const INPUT::IInputController& playerController,
 
         // LOAD THE CARROT MISSILE TEXTURE.
         const std::string CARROT_MISSILE_TEXTURE_FILEPATH = "res/Images/carrot.png";
-        std::shared_ptr<sf::Texture> carrotMissileTexture = m_graphicsSystem.GetTexture(CARROT_MISSILE_TEXTURE_FILEPATH);;
+        std::shared_ptr<sf::Texture> carrotMissileTexture = m_resourceManager.GetTexture(CARROT_MISSILE_TEXTURE_FILEPATH);;
         bool carrotMissileTextureLoaded = (nullptr != carrotMissileTexture);
         if (!carrotMissileTextureLoaded)
         {
@@ -276,8 +284,20 @@ void GameplayState::HandleInput(const INPUT::IInputController& playerController,
         // CREATE THE SPRITE FOR THE MISSILE.
         std::shared_ptr<sf::Sprite> carrotMissileSprite = std::make_shared<sf::Sprite>(*carrotMissileTexture);
 
+        // LOAD THE MISSILE SOUND DATA.
+        const std::string MISSILE_SOUND_FILEPATH = "res/Sounds/MissileLaunch.wav";
+        std::shared_ptr<sf::SoundBuffer> missileSoundBuffer = m_resourceManager.GetSoundBuffer(MISSILE_SOUND_FILEPATH);
+        bool missileSoundBufferLoaded = (nullptr != missileSoundBuffer);
+        if (!missileSoundBufferLoaded)
+        {
+            throw std::runtime_error("Error loading missile sound.");
+        }
+
+        // CREATE THE SOUND FOR THE MISSILE.
+        std::shared_ptr<sf::Sound> missileSound = std::make_shared<sf::Sound>(*missileSoundBuffer);
+
         // CREATE THE BUNNY'S MISSILE.
-        std::shared_ptr<OBJECTS::WEAPONS::Missile> missile = m_bunnyPlayer->FireMissile(carrotMissileSprite);
+        std::shared_ptr<OBJECTS::WEAPONS::Missile> missile = m_bunnyPlayer->FireMissile(carrotMissileSprite, missileSound);
         m_missiles.push_back(missile);
 
         // RESET THE CLOCK TRACKING WHEN THE BUNNY FIRED A MISSILE.
@@ -368,7 +388,7 @@ void GameplayState::HandleGameObjectCollisions()
             // GENERATE AN EXPLOSION AT THE LOCATION OF THE MISSILE.
             // Load the explosion texture.
             const std::string EXPLOSION_TEXTURE_FILEPATH = "res/Images/explosion1.png";
-            std::shared_ptr<sf::Texture> explosionTexture = m_graphicsSystem.GetTexture(EXPLOSION_TEXTURE_FILEPATH);;
+            std::shared_ptr<sf::Texture> explosionTexture = m_resourceManager.GetTexture(EXPLOSION_TEXTURE_FILEPATH);;
             bool explosionTextureLoaded = (nullptr != explosionTexture);
             if (!explosionTextureLoaded)
             {
@@ -380,8 +400,20 @@ void GameplayState::HandleGameObjectCollisions()
             sf::FloatRect missileBounds = (*missile)->GetBoundingRectangle();
             explosionSprite->setPosition(collidedObjectRectangle.left, collidedObjectRectangle.top);
 
+            // Load the explosion sound data.
+            const std::string EXPLOSION_SOUND_FILEPATH = "res/Sounds/Explosion.wav";
+            std::shared_ptr<sf::SoundBuffer> explosionSoundBuffer = m_resourceManager.GetSoundBuffer(EXPLOSION_SOUND_FILEPATH);
+            bool explosionSoundBufferLoaded = (nullptr != explosionSoundBuffer);
+            if (!explosionSoundBufferLoaded)
+            {
+                throw std::runtime_error("Error loading explosion sound.");
+            }
+
+            // Create the sound for the explosion.
+            std::shared_ptr<sf::Sound> explosionSound = std::make_shared<sf::Sound>(*explosionSoundBuffer);
+
             // Create the explosion.
-            std::shared_ptr<OBJECTS::Explosion> explosion = std::make_shared<OBJECTS::Explosion>(explosionSprite);
+            std::shared_ptr<OBJECTS::Explosion> explosion = std::make_shared<OBJECTS::Explosion>(explosionSprite, explosionSound);
             m_explosions.push_back(explosion);
 
             // REMOVE THE MISSILE SINCE IT HAS EXPLODED.

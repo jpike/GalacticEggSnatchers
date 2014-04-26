@@ -70,6 +70,18 @@
     <Filter Include="Source Files\Graphics\Gui">
       <UniqueIdentifier>{d62e4d88-5cc0-45ae-bf75-484be797eab5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Fonts">
+      <UniqueIdentifier>{3b2e2fdf-04aa-4555-a0de-7591bab5b421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Sounds">
+      <UniqueIdentifier>{6241e45b-527d-4c6c-bdc6-309da1fbb893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Resources">
+      <UniqueIdentifier>{56d3147e-f925-4996-9ec5-54a6647e28e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resources">
+      <UniqueIdentifier>{2a4ce434-a3ac-44f0-ab98-3c8eaf4ad4ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -99,9 +111,6 @@
     <ClCompile Include="src\Objects\Weapons\Missile.cpp">
       <Filter>Source Files\Objects\Weapons</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\GraphicsSystem.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Objects\AlienFactory.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
@@ -122,6 +131,12 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\Gui\GameplayHud.cpp">
       <Filter>Source Files\Graphics\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Objects\EasterEggFactory.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\ResourceManager.cpp">
+      <Filter>Source Files\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,9 +191,6 @@
     <ClInclude Include="src\Physics\Collisions\CollisionSystem.h">
       <Filter>Header Files\Physics\Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\GraphicsSystem.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\IRenderable.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
@@ -203,6 +215,12 @@
     <ClInclude Include="src\Graphics\Gui\GameplayHud.h">
       <Filter>Header Files\Graphics\Gui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Objects\EasterEggFactory.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\ResourceManager.h">
+      <Filter>Header Files\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\Images\bunny.png">
@@ -217,14 +235,39 @@
     <Image Include="res\Images\alien2.png">
       <Filter>Resource Files\Images</Filter>
     </Image>
-    <Image Include="res\Images\easterEgg1.png">
-      <Filter>Resource Files\Images</Filter>
-    </Image>
     <Image Include="res\Images\alienMissile1.png">
       <Filter>Resource Files\Images</Filter>
     </Image>
     <Image Include="res\Images\explosion1.png">
       <Filter>Resource Files\Images</Filter>
     </Image>
+    <Image Include="res\Images\Egg04.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\Images\Egg05.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\Images\Egg06.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\Images\Egg07.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\Images\Egg08.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\Fonts\Minecraftia.ttf">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\Sounds\Explosion.wav">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="res\Sounds\MissileLaunch.wav">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
   </ItemGroup>
 </Project>

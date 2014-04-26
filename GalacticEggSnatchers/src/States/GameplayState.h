@@ -4,10 +4,10 @@
 #include <memory>
 #include <vector>
 #include "Graphics/Gui/GameplayHud.h"
-#include "Graphics/GraphicsSystem.h"
 #include "Input/IInputController.h"
 #include "Objects/AllObjects.h"
 #include "Physics/Collisions/CollisionSystem.h"
+#include "Resources/ResourceManager.h"
 #include "States/IGameState.h"
 
 namespace STATES
@@ -91,8 +91,10 @@ namespace STATES
         /// @param[in]  pointsToAdd - The number of points to add to the current score.
         void AddToScore(const uint16_t pointsToAdd);
 
-        // GRAPHICS MEMBER VARIABLES.
-        GRAPHICS::GraphicsSystem m_graphicsSystem;  ///< The system that handles graphics resources.
+        // RESOURCE MEMBER VARIABLES.
+        RESOURCES::ResourceManager m_resourceManager;  ///< The system that handles resources.
+
+        // GRAPHICS MEMEBR VARIABLES.
         std::shared_ptr<GRAPHICS::GUI::GameplayHud> m_gameplayHud;   ///< The HUD for the gameplay state.
         
         // COLLISION MEMBER VARIABLES.

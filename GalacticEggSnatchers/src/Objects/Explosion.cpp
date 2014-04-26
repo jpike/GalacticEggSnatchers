@@ -3,13 +3,15 @@
 using namespace OBJECTS;
 
 // STATIC CONSTANT INITIALIZATION.
-const float Explosion::MAX_LIFETIME_IN_SECONDS = 3.0f;
+const float Explosion::MAX_LIFETIME_IN_SECONDS = 1.0f;
 
-Explosion::Explosion(const std::shared_ptr<sf::Sprite>& sprite) :
+Explosion::Explosion(const std::shared_ptr<sf::Sprite>& sprite, const std::shared_ptr<sf::Sound>& sound) :
     m_lifetime(sf::Time::Zero),
-    m_sprite(sprite)
+    m_sprite(sprite),
+    m_sound(sound)
 {
-    // Nothing else to do.
+    // Play the explosion sound.
+    m_sound->play();
 }
 
 Explosion::~Explosion()

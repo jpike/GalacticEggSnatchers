@@ -3,17 +3,18 @@
 
 using namespace GRAPHICS::GUI;
 
-ScoreLabel::ScoreLabel(const sf::Color& textColor, const std::shared_ptr<sf::Font>& font) :
+ScoreLabel::ScoreLabel(
+    const unsigned int fontSizeInPixels, 
+    const sf::Color& textColor, 
+    const std::shared_ptr<sf::Font>& font) :
     m_labelText()
 {
     // Initialize the score to 0.
     SetScore(0);
 
+    m_labelText.setCharacterSize(fontSizeInPixels);
     m_labelText.setColor(textColor);
-    m_labelText.setFont(*font);
-
-    /// @todo Remove or alter the setting of the text size here once we have a final font.
-    m_labelText.setCharacterSize(14);
+    m_labelText.setFont(*font);    
 }
 
 ScoreLabel::~ScoreLabel()

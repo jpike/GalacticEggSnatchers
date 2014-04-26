@@ -15,6 +15,7 @@ namespace GUI
     class GameplayHud : public GRAPHICS::IRenderable
     {
     public:
+        static const unsigned int DEFAULT_FONT_SIZE_IN_PIXELS;  ///< The default font size for text in the hud.
         static const sf::Color DEFAULT_TEXT_COLOR;  ///< The default color for text in the hud.
         
         /// @brief      Constructor.

@@ -7,12 +7,17 @@ const float Alien::MOVE_SPEED_IN_PIXELS_PER_SECOND = 64.0f;
 
 // INSTANCE METHODS.
 
-Alien::Alien(const std::shared_ptr<sf::Sprite>& sprite, const std::shared_ptr<sf::Texture>& missileTexture) :
+Alien::Alien(
+    const std::shared_ptr<sf::Sprite>& sprite, 
+    const std::shared_ptr<sf::Texture>& missileTexture,
+    const std::shared_ptr<sf::SoundBuffer>& missileSound) :
+
     m_sprite(sprite),
     // The velocity is initialized so that the alien moves right initially.
     m_velocity(MOVE_SPEED_IN_PIXELS_PER_SECOND, 0.0f),
     m_brain(),
-    m_missileTexture(missileTexture)
+    m_missileTexture(missileTexture),
+    m_missileSoundBuffer(missileSound)
 {
     // Nothing else to do.
 }
@@ -142,15 +147,19 @@ std::shared_ptr<WEAPONS::Missile> Alien::FireMissile() const
     std::shared_ptr<sf::Sprite> missileSprite = std::make_shared<sf::Sprite>(*m_missileTexture);
     missileSprite->setPosition(missileXPosition, yPositionBelowAlien);
 
+    // CREATE A SOUND FOR THE MISSILE.
+    std::shared_ptr<sf::Sound> missileSound = std::make_shared<sf::Sound>(*m_missileSoundBuffer);
+
     // FIRE THE MISSILE DOWNWARD FROM THE ALIEN.
     const float NO_HORIZONTAL_MOVEMENT = 0.0f;
-    const float MISSILE_Y_VELOCITY_IN_PIXELS_PER_SECOND = 128.0f;
+    const float MISSILE_Y_VELOCITY_IN_PIXELS_PER_SECOND = 192.0f;
     sf::Vector2f missileVelocity(NO_HORIZONTAL_MOVEMENT, MISSILE_Y_VELOCITY_IN_PIXELS_PER_SECOND);
     
     std::shared_ptr<OBJECTS::WEAPONS::Missile> alienMissile = std::make_shared<OBJECTS::WEAPONS::Missile>(
         OBJECTS::WEAPONS::MISSILE_SOURCE_ALIEN,
         missileVelocity,
-        missileSprite);
+        missileSprite,
+        missileSound);
 
     return alienMissile;
 }

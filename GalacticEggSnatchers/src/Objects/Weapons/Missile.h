@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "Graphics/IRenderable.h"
 #include "Objects/IGameObject.h"
@@ -37,10 +38,12 @@ namespace WEAPONS
         /// @param[in]  source - The source of missile.
         /// @param[in]  velocity - The velocity of the missile (in pixels per second).
         /// @param      sprite - The graphical sprite for this missile.
+        /// @param      sound - The sound to play for the missile.
         explicit Missile(
             const MissileSource source,
             const sf::Vector2f& velocity,
-            const std::shared_ptr<sf::Sprite>& sprite);
+            const std::shared_ptr<sf::Sprite>& sprite,
+            const std::shared_ptr<sf::Sound>& sound);
 
         /// @brief      Copy constructor.
         /// @param[in]  missileToCopy - The missile to copy.
@@ -90,6 +93,7 @@ namespace WEAPONS
         MissileSource m_source; ///< The missile's source.
         sf::Vector2f m_velocity;    ///< The missile's velocity (in pixels per second).
         std::shared_ptr<sf::Sprite> m_sprite;   ///< The missile's graphical sprite.
+        std::shared_ptr<sf::Sound> m_sound; ///< The sound to play for the missile.
     };
 }
 }

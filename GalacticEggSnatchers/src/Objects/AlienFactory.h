@@ -24,7 +24,7 @@ namespace OBJECTS
         ~AlienFactory();    ///< Private destructor since this class isn't supposed to be instantiated.
         AlienFactory& operator= (const AlienFactory& factoryToCopy);    ///< Private to disallow assignment.
 
-        static const unsigned int ALIEN_TEXTURE_COUNT = 2;  ///< The 
+        static const unsigned int ALIEN_TEXTURE_COUNT = 2;  ///< The number of available alien textures.
         static const std::array<char*, ALIEN_TEXTURE_COUNT> ALIEN_TEXTURE_FILEPATHS; ///< The available alien texture filepaths.
     };
 }

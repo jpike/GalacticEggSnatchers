@@ -66,7 +66,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "$(SFML_DIR)\bin\*.dll" "$(TargetDir)"
@@ -89,7 +89,7 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>sfml-system.lib;sfml-window.lib;sfml-graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "$(SFML_DIR)\bin\*.dll" "$(TargetDir)"
@@ -100,7 +100,6 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
   <ItemGroup>
     <ClCompile Include="src\ArtificialIntelligence\AlienAiBrain.cpp" />
     <ClCompile Include="src\GalacticEggSnatchersGame.cpp" />
-    <ClCompile Include="src\Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="src\Graphics\Gui\GameplayHud.cpp" />
     <ClCompile Include="src\Graphics\Gui\HighScoreLabel.cpp" />
     <ClCompile Include="src\Graphics\Gui\LivesLabel.cpp" />
@@ -111,15 +110,16 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     <ClCompile Include="src\Objects\AlienFactory.cpp" />
     <ClCompile Include="src\Objects\EasterBunny.cpp" />
     <ClCompile Include="src\Objects\EasterEgg.cpp" />
+    <ClCompile Include="src\Objects\EasterEggFactory.cpp" />
     <ClCompile Include="src\Objects\Explosion.cpp" />
     <ClCompile Include="src\Objects\Weapons\Missile.cpp" />
     <ClCompile Include="src\Physics\Collisions\CollisionSystem.cpp" />
+    <ClCompile Include="src\Resources\ResourceManager.cpp" />
     <ClCompile Include="src\States\GameplayState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ArtificialIntelligence\AlienAiBrain.h" />
     <ClInclude Include="src\GalacticEggSnatchersGame.h" />
-    <ClInclude Include="src\Graphics\GraphicsSystem.h" />
     <ClInclude Include="src\Graphics\Gui\GameplayHud.h" />
     <ClInclude Include="src\Graphics\Gui\HighScoreLabel.h" />
     <ClInclude Include="src\Graphics\Gui\LivesLabel.h" />
@@ -132,11 +132,13 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     <ClInclude Include="src\Objects\AllObjects.h" />
     <ClInclude Include="src\Objects\EasterBunny.h" />
     <ClInclude Include="src\Objects\EasterEgg.h" />
+    <ClInclude Include="src\Objects\EasterEggFactory.h" />
     <ClInclude Include="src\Objects\Explosion.h" />
     <ClInclude Include="src\Objects\IGameObject.h" />
     <ClInclude Include="src\Objects\Weapons\Missile.h" />
     <ClInclude Include="src\Physics\Collisions\CollisionSystem.h" />
     <ClInclude Include="src\Physics\Collisions\ICollidable.h" />
+    <ClInclude Include="src\Resources\ResourceManager.h" />
     <ClInclude Include="src\States\AllStates.h" />
     <ClInclude Include="src\States\CreditsState.h" />
     <ClInclude Include="src\States\GameplayState.h" />
@@ -150,8 +152,19 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     <Image Include="res\Images\alienMissile1.png" />
     <Image Include="res\Images\bunny.png" />
     <Image Include="res\Images\carrot.png" />
-    <Image Include="res\Images\easterEgg1.png" />
+    <Image Include="res\Images\Egg04.png" />
+    <Image Include="res\Images\Egg05.png" />
+    <Image Include="res\Images\Egg06.png" />
+    <Image Include="res\Images\Egg07.png" />
+    <Image Include="res\Images\Egg08.png" />
     <Image Include="res\Images\explosion1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\Fonts\Minecraftia.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\Sounds\Explosion.wav" />
+    <Media Include="res\Sounds\MissileLaunch.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

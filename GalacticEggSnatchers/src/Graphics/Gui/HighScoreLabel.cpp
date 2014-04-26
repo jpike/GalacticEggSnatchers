@@ -3,17 +3,18 @@
 
 using namespace GRAPHICS::GUI;
 
-HighScoreLabel::HighScoreLabel(const sf::Color& textColor, const std::shared_ptr<sf::Font>& font) :
+HighScoreLabel::HighScoreLabel(
+    const unsigned int fontSizeInPixels, 
+    const sf::Color& textColor, 
+    const std::shared_ptr<sf::Font>& font) :
     m_labelText()
 {
     // Initialize the high score to 0.
     SetHighScore(0);
 
+    m_labelText.setCharacterSize(fontSizeInPixels);
     m_labelText.setColor(textColor);
     m_labelText.setFont(*font);
-
-    /// @todo Remove or alter the setting of the text size here once we have a final font.
-    m_labelText.setCharacterSize(14);
 }
 
 HighScoreLabel::~HighScoreLabel()

@@ -5,12 +5,15 @@ using namespace OBJECTS::WEAPONS;
 Missile::Missile(
     const MissileSource source,
     const sf::Vector2f& velocity,
-    const std::shared_ptr<sf::Sprite>& sprite) :
+    const std::shared_ptr<sf::Sprite>& sprite,
+    const std::shared_ptr<sf::Sound>& sound) :
     m_source(source),
     m_velocity(velocity),
-    m_sprite(sprite)
+    m_sprite(sprite),
+    m_sound(sound)
 {
-    // Nothing else to do.
+    // Play the missile sound.
+    m_sound->play();
 }
 
 Missile::Missile(const Missile& missileToCopy)

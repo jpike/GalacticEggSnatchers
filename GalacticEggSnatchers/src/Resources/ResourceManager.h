@@ -3,22 +3,23 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
-/// @brief  Code related to graphics.
-namespace GRAPHICS
+/// @brief  Code related to resources (files, etc.) for the game.
+namespace RESOURCES
 {
     ////////////////////////////////////////////////////////
-    /// @brief  Responsible for managing graphics resources.
+    /// @brief  Responsible for managing resources.
     ////////////////////////////////////////////////////////
-    class GraphicsSystem
+    class ResourceManager
     {
     public:
         /// @brief  Constructor.
-        explicit GraphicsSystem();
+        explicit ResourceManager();
 
         /// @brief  Destructor.
-        ~GraphicsSystem();
+        ~ResourceManager();
 
         /// @brief      Gets the specified texture resource.
         ///             It will persist in memory as long as this object is alive.
@@ -36,14 +37,23 @@ namespace GRAPHICS
         ///             a new instance.
         /// @param[in]  filepath - The filepath (relative or absolute) path to the font file.
         /// @return     The font resource, if successfully loaded.  Nullptr otherwise.
-        /// @todo       Should this go in a generic resource manager instead?
         std::shared_ptr<sf::Font> GetFont(const std::string& filepath);
 
-    private:
-        GraphicsSystem(const GraphicsSystem& systemToCopy);   ///< Private to disallow copying.
-        GraphicsSystem& operator= (const GraphicsSystem& collisionSystem);    ///< Private to disallow assignment.
+        /// @brief      Gets the specified sound buffer resource.
+        ///             It will persist in memory as long as this object is alive.
+        ///             If a sound buffer at the specified filepath has already been loaded,
+        ///             the existing resource may be returned as opposed to loading
+        ///             a new instance.
+        /// @param[in]  filepath - The filepath (relative or absolute) path to the sound file.
+        /// @return     The sound buffer resource, if successfully loaded.  Nullptr otherwise.
+        std::shared_ptr<sf::SoundBuffer> GetSoundBuffer(const std::string& filepath);
 
-        std::unordered_map< std::string, std::shared_ptr<sf::Texture> > m_textures; ///< Texture resources managed by this system.
-        std::unordered_map< std::string, std::shared_ptr<sf::Font> > m_fonts;   ///< Font resources managed by this system.
+    private:
+        ResourceManager(const ResourceManager& systemToCopy);   ///< Private to disallow copying.
+        ResourceManager& operator= (const ResourceManager& collisionSystem);    ///< Private to disallow assignment.
+
+        std::unordered_map< std::string, std::shared_ptr<sf::Texture> > m_textures; ///< Texture resources managed by this object.
+        std::unordered_map< std::string, std::shared_ptr<sf::Font> > m_fonts;   ///< Font resources managed by this object.
+        std::unordered_map< std::string, std::shared_ptr<sf::SoundBuffer> > m_sounds;   ///< Sound resources managed by this object.
     };
 }

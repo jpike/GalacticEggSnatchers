@@ -123,7 +123,9 @@ void EasterBunny::MoveRight(const sf::Time& elapsedTime)
     m_sprite->move(rightMovementInPixels, NO_VERTICAL_MOVEMENT);
 }
 
-std::shared_ptr<OBJECTS::WEAPONS::Missile> EasterBunny::FireMissile(const std::shared_ptr<sf::Sprite>& missileSprite)
+std::shared_ptr<OBJECTS::WEAPONS::Missile> EasterBunny::FireMissile(
+    const std::shared_ptr<sf::Sprite>& missileSprite,
+    const std::shared_ptr<sf::Sound>& missileSound)
 {
     // POSITION THE MISSILE SPRITE SO THAT IT FIRES FROM THE BUNNY.
     const sf::Vector2f& bunnyPosition = m_sprite->getPosition();
@@ -134,13 +136,14 @@ std::shared_ptr<OBJECTS::WEAPONS::Missile> EasterBunny::FireMissile(const std::s
 
     // FIRE THE MISSILE UPWARD FROM THE BUNNY.
     const float NO_HORIZONTAL_MOVEMENT = 0.0f;
-    const float MISSILE_Y_VELOCITY_IN_PIXELS_PER_SECOND = -128.0f;
+    const float MISSILE_Y_VELOCITY_IN_PIXELS_PER_SECOND = -192.0f;
     sf::Vector2f missileVelocity(NO_HORIZONTAL_MOVEMENT, MISSILE_Y_VELOCITY_IN_PIXELS_PER_SECOND);
     
     std::shared_ptr<OBJECTS::WEAPONS::Missile> bunnyMissile = std::make_shared<OBJECTS::WEAPONS::Missile>(
         OBJECTS::WEAPONS::MISSILE_SOURCE_EASTER_BUNNY,
         missileVelocity,
-        missileSprite);
+        missileSprite,
+        missileSound);
 
     return bunnyMissile;
 }

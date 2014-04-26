@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "Graphics/IRenderable.h"
 #include "Objects/IGameObject.h"
@@ -15,9 +16,10 @@ namespace OBJECTS
     public:
         static const float MAX_LIFETIME_IN_SECONDS; ///< The maximum lifetime of an explosion.
         
-        /// @brief      Constructor.
-        /// @param[in]  sprite - The graphical sprite to use for the explosion.
-        explicit Explosion(const std::shared_ptr<sf::Sprite>& sprite);
+        /// @brief  Constructor.
+        /// @param  sprite - The graphical sprite to use for the explosion.
+        /// @param  sound - The sound to play for the explosion.
+        explicit Explosion(const std::shared_ptr<sf::Sprite>& sprite, const std::shared_ptr<sf::Sound>& sound);
 
         /// @brief  Destructor.
         ~Explosion();
@@ -38,5 +40,6 @@ namespace OBJECTS
 
         sf::Time m_lifetime;    ///< The time this explosion has been alive.
         std::shared_ptr<sf::Sprite> m_sprite;   ///< The graphical sprite for the explosion.
+        std::shared_ptr<sf::Sound> m_sound; ///<< The sound to play for the explosion.
     };
 }

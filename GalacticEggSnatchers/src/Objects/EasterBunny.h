@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "Graphics/IRenderable.h"
 #include "Objects/IGameObject.h"
@@ -78,13 +79,16 @@ namespace OBJECTS
         ///             to be the elapsed time since the last update frame.
         void MoveRight(const sf::Time& elapsedTime);
 
-        /// @brief      Has the bunny fire a missile.
-        /// @param[in]  missileSprite - The sprite to use for the missile.
-        ///             It's position does not already need to be set - it will
-        ///             be properly set within this method to make the missile appear
-        ///             to fire from the bunny.
-        /// @return     The newly fired missile from the bunny.
-        std::shared_ptr<OBJECTS::WEAPONS::Missile> FireMissile(const std::shared_ptr<sf::Sprite>& missileSprite);
+        /// @brief  Has the bunny fire a missile.
+        /// @param  missileSprite - The sprite to use for the missile.
+        ///         It's position does not already need to be set - it will
+        ///         be properly set within this method to make the missile appear
+        ///         to fire from the bunny.
+        /// @param  missileSound - The sound to play for firing the missile.
+        /// @return The newly fired missile from the bunny.
+        std::shared_ptr<OBJECTS::WEAPONS::Missile> FireMissile(
+            const std::shared_ptr<sf::Sprite>& missileSprite,
+            const std::shared_ptr<sf::Sound>& missileSound);
 
         /// @brief  Gets the number of lives the bunny has.
         /// @return The bunny's number of lives.
