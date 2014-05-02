@@ -89,6 +89,10 @@ void GalacticEggSnatchersGame::SwitchToNextGameState(const STATES::GameStateType
             GAME_TITLE,
             screenBoundsInPixels);
         break;
+    case STATES::GAME_STATE_TYPE_HIGH_SCORES:
+        nextGameState = std::make_shared<STATES::HighScoresState>(
+            screenBoundsInPixels);
+        break;
     case STATES::GAME_STATE_TYPE_CREDITS:
         nextGameState = std::make_shared<STATES::CreditsState>(
             screenBoundsInPixels);

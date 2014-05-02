@@ -85,7 +85,7 @@ void CreditsState::InitializeCreditsText()
     thirdContributor.setPosition(CONTRIBUTOR_X_POSITION_IN_PIXELS, thirdContributorYPositionInPixels);
     m_contributors.push_back(thirdContributor);
 
-    sf::Text fourthContributor("Mercy404 - Sound", *creditsFont, CREDITS_FONT_HEIGHT_IN_PIXELS);
+    sf::Text fourthContributor("Chris DeLeon - Art", *creditsFont, CREDITS_FONT_HEIGHT_IN_PIXELS);
     float fourthContributorYPositionInPixels = (
         thirdContributorYPositionInPixels + 
         CREDITS_FONT_HEIGHT_IN_PIXELS +
@@ -93,11 +93,19 @@ void CreditsState::InitializeCreditsText()
     fourthContributor.setPosition(CONTRIBUTOR_X_POSITION_IN_PIXELS, fourthContributorYPositionInPixels);
     m_contributors.push_back(fourthContributor);
 
-    sf::Text fifthContributor("Andrew Tyler - Font", *creditsFont, CREDITS_FONT_HEIGHT_IN_PIXELS);
+    sf::Text fifthContributor("Mercy404 - Sound", *creditsFont, CREDITS_FONT_HEIGHT_IN_PIXELS);
     float fifthContributorYPositionInPixels = (
         fourthContributorYPositionInPixels + 
         CREDITS_FONT_HEIGHT_IN_PIXELS +
         BUFFER_SPACE_BETWEEN_CONTRIBUTORS);
     fifthContributor.setPosition(CONTRIBUTOR_X_POSITION_IN_PIXELS, fifthContributorYPositionInPixels);
     m_contributors.push_back(fifthContributor);
+
+    sf::Text sixthContributor("Andrew Tyler - Font", *creditsFont, CREDITS_FONT_HEIGHT_IN_PIXELS);
+    float sixthContributorYPositionInPixels = (
+        fifthContributorYPositionInPixels + 
+        CREDITS_FONT_HEIGHT_IN_PIXELS +
+        BUFFER_SPACE_BETWEEN_CONTRIBUTORS);
+    sixthContributor.setPosition(CONTRIBUTOR_X_POSITION_IN_PIXELS, sixthContributorYPositionInPixels);
+    m_contributors.push_back(sixthContributor);
 }

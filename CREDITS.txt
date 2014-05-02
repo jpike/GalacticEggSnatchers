@@ -3,6 +3,7 @@ The following people were involved directly in the creation of this game:
 Jacob Pike - Team Lead, Programmer
 AleKahpwn (reddit) - Art, Task Management
 Johnicholas (reddit) - Art
+Chris DeLeon - Art
 Mercy404 (reddit) - Sound
 
 The following "third parties" contributed to the game:

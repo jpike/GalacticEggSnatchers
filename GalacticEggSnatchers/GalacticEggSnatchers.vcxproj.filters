@@ -82,6 +82,12 @@
     <Filter Include="Source Files\Resources">
       <UniqueIdentifier>{2a4ce434-a3ac-44f0-ab98-3c8eaf4ad4ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\SaveData">
+      <UniqueIdentifier>{7c0c55d4-0091-49e4-90e2-0c07c32c1eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SaveData">
+      <UniqueIdentifier>{dbaa75dc-d829-4a66-9293-67fa2f7dcd86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -143,6 +149,12 @@
     </ClCompile>
     <ClCompile Include="src\States\CreditsState.cpp">
       <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\States\HighScoresState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SaveData\HighScores.cpp">
+      <Filter>Source Files\SaveData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="src\Resources\ResourceManager.h">
       <Filter>Header Files\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SaveData\HighScores.h">
+      <Filter>Header Files\SaveData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -115,8 +115,10 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     <ClCompile Include="src\Objects\Weapons\Missile.cpp" />
     <ClCompile Include="src\Physics\Collisions\CollisionSystem.cpp" />
     <ClCompile Include="src\Resources\ResourceManager.cpp" />
+    <ClCompile Include="src\SaveData\HighScores.cpp" />
     <ClCompile Include="src\States\CreditsState.cpp" />
     <ClCompile Include="src\States\GameplayState.cpp" />
+    <ClCompile Include="src\States\HighScoresState.cpp" />
     <ClCompile Include="src\States\TitleState.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +143,7 @@ xcopy /Y "$(ProjectDir)res\*" "$(TargetDir)res\" /S /E</Command>
     <ClInclude Include="src\Physics\Collisions\CollisionSystem.h" />
     <ClInclude Include="src\Physics\Collisions\ICollidable.h" />
     <ClInclude Include="src\Resources\ResourceManager.h" />
+    <ClInclude Include="src\SaveData\HighScores.h" />
     <ClInclude Include="src\States\AllStates.h" />
     <ClInclude Include="src\States\CreditsState.h" />
     <ClInclude Include="src\States\GameplayState.h" />
