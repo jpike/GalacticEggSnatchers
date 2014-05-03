@@ -2,13 +2,15 @@
 
 using namespace ARTIFICIAL_INTELLIGENCE;
 
-AlienAiBrain::AlienAiBrain() :
+AlienAiBrain::AlienAiBrain(
+    const unsigned int minTimeBetweenMissileFiresInSeconds,
+    const unsigned int maxTimeBetweenMissileFiresInSeconds) :
     m_missileFiringClock(),
     m_minTimeBetweenMissileFiresInSeconds(),
     m_randomNumberGenerator()
 {
     InitializeRandomNumberGenerator();
-    InitializeTimeBetweenMissileFires();
+    InitializeTimeBetweenMissileFires(minTimeBetweenMissileFiresInSeconds, maxTimeBetweenMissileFiresInSeconds);
 }
 
 AlienAiBrain::AlienAiBrain(const AlienAiBrain& brainToCopy) :
@@ -87,12 +89,12 @@ void AlienAiBrain::InitializeRandomNumberGenerator()
     m_randomNumberGenerator.seed(seed);
 }
 
-void AlienAiBrain::InitializeTimeBetweenMissileFires()
+void AlienAiBrain::InitializeTimeBetweenMissileFires(
+    const unsigned int minTimeBetweenMissileFiresInSeconds,
+    const unsigned int maxTimeBetweenMissileFiresInSeconds)
 {
     // GENERATE A RANDOM NUMBER OF SECONDS REQUIRED BETWEEN MISSILE FIRES.
     // This helps give more appearance of randomness in the alien missile firing.
-    const unsigned int MIN_TIME_IN_SECONDS = 3;
-    const unsigned int MAX_TIME_IN_SECONDS = 60;
-    unsigned int randomSeconds = ( (m_randomNumberGenerator() % MAX_TIME_IN_SECONDS) + MIN_TIME_IN_SECONDS );
+    unsigned int randomSeconds = ( (m_randomNumberGenerator() % maxTimeBetweenMissileFiresInSeconds) + minTimeBetweenMissileFiresInSeconds );
     m_minTimeBetweenMissileFiresInSeconds = static_cast<float>(randomSeconds);
 }

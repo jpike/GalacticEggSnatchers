@@ -3,26 +3,37 @@
 using namespace OBJECTS;
 
 // STATIC CONSTANTS.
-const float Alien::MOVE_SPEED_IN_PIXELS_PER_SECOND = 64.0f;
+const float Alien::DEFAULT_MOVE_SPEED_IN_PIXELS_PER_SECOND = 64.0f;
 
 // INSTANCE METHODS.
 
 Alien::Alien(
+    const unsigned int minTimeBetweenMissileFiresInSeconds,
+    const unsigned int maxTimeBetweenMissileFiresInSeconds,
+    const float moveSpeedInPixelsPerSecond, 
     const std::shared_ptr<sf::Sprite>& sprite, 
     const std::shared_ptr<sf::Texture>& missileTexture,
     const std::shared_ptr<sf::SoundBuffer>& missileSound) :
 
     m_sprite(sprite),
     // The velocity is initialized so that the alien moves right initially.
-    m_velocity(MOVE_SPEED_IN_PIXELS_PER_SECOND, 0.0f),
-    m_brain(),
+    m_velocity(moveSpeedInPixelsPerSecond, 0.0f),
+    m_brain(minTimeBetweenMissileFiresInSeconds, maxTimeBetweenMissileFiresInSeconds),
     m_missileTexture(missileTexture),
     m_missileSoundBuffer(missileSound)
 {
     // Nothing else to do.
 }
 
-Alien::Alien(const Alien& alienToCopy)
+/// @todo   Rethink this copy constructor and the copy helper method
+///         since we must directly copy the alien anyway with no
+///         default constructor for all members.
+Alien::Alien(const Alien& alienToCopy) :
+    m_sprite(alienToCopy.m_sprite),
+    m_velocity(alienToCopy.m_velocity),
+    m_brain(alienToCopy.m_brain),
+    m_missileTexture(alienToCopy.m_missileTexture),
+    m_missileSoundBuffer(alienToCopy.m_missileSoundBuffer)
 {
     Copy(alienToCopy);
 }

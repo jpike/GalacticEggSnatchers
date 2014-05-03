@@ -1,4 +1,6 @@
+#include <chrono>
 #include <fstream>
+#include <random>
 #include <stdexcept>
 #include "GalacticEggSnatchersGame.h"
 #include "Graphics/IRenderable.h"
@@ -12,7 +14,7 @@ using namespace STATES;
 
 // STATIC CONSTANT INITIALIZATION.
 const uint16_t GameplayState::DEFAULT_ALIEN_KILL_POINTS = 100;
-
+const uint16_t GameplayState::MAX_HIGH_SCORE = 65500;
 
 // INSTANCE METHODS.
 
@@ -28,6 +30,7 @@ GameplayState::GameplayState(const sf::FloatRect& screenBoundsInPixels) :
     m_currentScore(0),
     m_highScore(0),
     m_highScores(),
+    m_alienParameters(),
     m_bunnyPlayer(),
     m_easterEggs(),
     m_aliens(),
@@ -38,7 +41,7 @@ GameplayState::GameplayState(const sf::FloatRect& screenBoundsInPixels) :
     m_playerController = std::make_shared<INPUT::KeyboardController>();
     m_bunnyPlayer = CreateInitialBunnyPlayer();
     m_easterEggs = CreateInitialEasterEggs();
-    m_aliens = CreateInitialAliens();
+    m_aliens = CreateInitialAliens(m_alienParameters);
 
     // LOAD THE HIGH SCORES.
     LoadHighScores();
@@ -83,6 +86,18 @@ void GameplayState::Update(const sf::Time& elapsedTime)
         // HANDLE COLLISIONS WITH THE SCREEN BOUNDARIES.
         HandleScreenBoundaryCollisions(m_screenBoundsInPixels);
 
+        // SPAWN A NEW WAVE OF ALIENS IF THEY ARE ALMOST ALL GONE.
+        // This helps keep the game going and make it more fun with increasing difficulty.
+        // We don't spawn a new wave if zero aliens remain.  If the player
+        // has managed to do that in-between updates, congratulations!
+        // Therefore, exactly one alien is require for spawning a new wave.
+        const unsigned int REMAINING_ALIENS_TO_TRIGGER_NEW_WAVE = 1;
+        bool moreAliensNeeded = (REMAINING_ALIENS_TO_TRIGGER_NEW_WAVE == m_aliens.size());
+        if (moreAliensNeeded)
+        {
+            SpawnAlienWave();
+        }
+
         // UPDATE THE HUD.
         /// @todo Scores are updated elsewhere, but maybe they should be updated here?
         m_gameplayHud->SetLivesCount(m_bunnyPlayer->GetLives());
@@ -106,9 +121,21 @@ void GameplayState::HandleKeyPress(const sf::Keyboard::Key key)
     bool gameplayEnded = (playerWon || playerLost);
     if (gameplayEnded)
     {
-        // Have the game return to the title screen since the gameplay
-        // has ended and the user has pressed a key.
-        m_nextMainState = GAME_STATE_TYPE_TITLE;
+        // CHECK IF AN APPROPRIATE KEY WAS PRESSED.
+        // We restrict the key pressed to just the Enter key for returning
+        // to the title screen to avoid having to handle the issue of the player
+        // still pressing the game controls as soon as the game ends.
+        // This could obviously be handled in a better way.
+        bool enterKeyPressed = (sf::Keyboard::Return == key);
+        if (enterKeyPressed)
+        {
+            // Have the game return to the title screen since the gameplay
+            // has ended and the user has pressed an appropriate key.
+            m_nextMainState = GAME_STATE_TYPE_TITLE;
+
+            // Save the updated set of high scores.
+            SaveHighScores();
+        }
     }
 }
 
@@ -187,7 +214,7 @@ std::vector< std::shared_ptr<OBJECTS::EasterEgg> > GameplayState::CreateInitialE
     return initialEasterEggs;
 }
 
-std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens()
+std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(const AlienDifficultyParameters& alienParameters)
 {
     // LOAD THE MISSILE SOUND DATA FOR ALIENS.
     const std::string MISSILE_SOUND_FILEPATH = "res/Sounds/MissileLaunch.wav";
@@ -256,10 +283,15 @@ std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(
             }
 
             // CREATE THE ALIEN.
-            std::shared_ptr<OBJECTS::Alien> alien = std::make_shared<OBJECTS::Alien>(
+            // Note that std::make_shared is not used here simply because Visual Studio 2012
+            // doesn't seem to have a version that supports more than 5 arguments.
+            std::shared_ptr<OBJECTS::Alien> alien(new OBJECTS::Alien(
+                alienParameters.MinTimeBetweenMissileFiresInSeconds,
+                alienParameters.MaxTimeBetweenMissileFiresInSeconds,
+                alienParameters.HorizontalMoveSpeedInPixelsPerSecond,
                 alienSprite, 
                 alienMissileTexture,
-                missileSoundBuffer);
+                missileSoundBuffer) );
             initialAliens.push_back(alien);
         }
     }
@@ -267,10 +299,59 @@ std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(
     return initialAliens;
 }
 
+void GameplayState::SpawnAlienWave()
+{
+    // INCREASE THE ALIEN DIFFICULTY PARAMETERS.
+    // First try decreasing the minimum frequency of alien missile fires.
+    bool minMissileFiringTimeCanDecrease = (
+        m_alienParameters.MinTimeBetweenMissileFiresInSeconds > AlienDifficultyParameters::MIN_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS);
+    if (minMissileFiringTimeCanDecrease)
+    {
+        // Make the new aliens potentially fire missiles more frequently.
+        m_alienParameters.MinTimeBetweenMissileFiresInSeconds--;
+        std::list< std::shared_ptr<OBJECTS::Alien> > newAliens = CreateInitialAliens(m_alienParameters);
+        m_aliens.insert(m_aliens.end(), newAliens.begin(), newAliens.end());
+        return;
+    }
+
+    // Next try decreasing the maximum frequency of alien missile fires.
+    // An absolute "minimum" for the missile fire max time decreases is specified
+    // to provide more variety in difficulty increases (high chance of the player
+    // encountering speed increases later in this function).
+    const unsigned int MINIMUM_MAX_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS = 30;
+    bool maxMissileFiringTimeCanDecrease = (
+        m_alienParameters.MaxTimeBetweenMissileFiresInSeconds > m_alienParameters.MinTimeBetweenMissileFiresInSeconds &&
+        m_alienParameters.MaxTimeBetweenMissileFiresInSeconds > MINIMUM_MAX_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS);
+    if (maxMissileFiringTimeCanDecrease)
+    {
+        // Make the new aliens potentially fire missiles more frequently.
+        const unsigned int MISSILE_FIRE_MAX_TIME_DECREASE_PER_WAVE = 4;
+        m_alienParameters.MaxTimeBetweenMissileFiresInSeconds -= MISSILE_FIRE_MAX_TIME_DECREASE_PER_WAVE;
+        std::list< std::shared_ptr<OBJECTS::Alien> > newAliens = CreateInitialAliens(m_alienParameters);
+        m_aliens.insert(m_aliens.end(), newAliens.begin(), newAliens.end());
+        return;
+    }
+
+    // Next try increasing the speed of the aliens.
+    // It is restricted to halfway across the screen to avoid having them move too fast.
+    float screenHalfWidth = m_screenBoundsInPixels.width / 2.0f;
+    bool alienSpeedCanIncrease = (
+        m_alienParameters.HorizontalMoveSpeedInPixelsPerSecond < screenHalfWidth);
+    if (alienSpeedCanIncrease)
+    {
+        // Make the new aliens move faster.
+        const float ALIEN_SPEED_INCREASE_PER_WAVE = 4.0f;
+        m_alienParameters.HorizontalMoveSpeedInPixelsPerSecond += ALIEN_SPEED_INCREASE_PER_WAVE;
+        std::list< std::shared_ptr<OBJECTS::Alien> > newAliens = CreateInitialAliens(m_alienParameters);
+        m_aliens.insert(m_aliens.end(), newAliens.begin(), newAliens.end());
+        return;
+    }
+}
+
 void GameplayState::LoadHighScores()
 {   
     // OPEN THE HIGH SCORES FILE.
-    const std::string HIGH_SCORES_FILEPATH = "res/data/highScores.txt";
+    const std::string HIGH_SCORES_FILEPATH = "res/highScores.txt";
     std::ifstream highScoresFile(HIGH_SCORES_FILEPATH, std::ios_base::in);
     if (highScoresFile.is_open())
     {
@@ -318,6 +399,7 @@ void GameplayState::InitializeHud()
 
     // INITIALIZE THE GAMEPLAY HUD.
     m_gameplayHud = std::make_shared<GRAPHICS::GUI::GameplayHud>(m_screenBoundsInPixels, hudFont);
+    m_gameplayHud->SetHighScore(m_highScore);
 }
 
 void GameplayState::HandleInput(const INPUT::IInputController& playerController, const sf::Time& elapsedTime)
@@ -440,6 +522,20 @@ void GameplayState::UpdateGameObjects(const sf::Time& elapsedTime)
 
 void GameplayState::HandleGameObjectCollisions()
 {
+    // INITIALIZE A RANDOM NUMBER GENERATOR FOR RANDOMLY ROTATING EXPLOSION SPRITES.
+    /// @todo Refactor this randomness logic to a more central location.
+    // The random number generator variables are static to ensure randomness over multiple calls to this function.
+    static bool randomNumberGeneratorInitialized = false;
+    static std::default_random_engine randomNumberGenerator;
+    if (!randomNumberGeneratorInitialized)
+    {
+        // Initialize the random number generator with a seed based on the current time.
+        unsigned long seed = static_cast<unsigned long>(std::chrono::system_clock::now().time_since_epoch().count());
+        randomNumberGenerator.seed(seed);
+
+        randomNumberGeneratorInitialized = true;
+    }
+    
     // CHECK FOR COLLISIONS WITH MISSILES.
     // We don't automatically increment the iterator during the for loop because we may need to
     // erase from the container during the loop for missiles that collide with objects.
@@ -478,8 +574,28 @@ void GameplayState::HandleGameObjectCollisions()
 
             // Create the sprite for the explosion.
             std::shared_ptr<sf::Sprite> explosionSprite = std::make_shared<sf::Sprite>(*explosionTexture);
-            sf::FloatRect missileBounds = (*missile)->GetBoundingRectangle();
-            explosionSprite->setPosition(collidedObjectRectangle.left, collidedObjectRectangle.top);
+            // Set the origin for transformations to the center of the sprite to make rotation work properly.
+            sf::FloatRect explosionBounds = explosionSprite->getLocalBounds();
+            float explosionHalfWidth = explosionBounds.width / 2.0f;
+            float explosionCenterX = explosionBounds.left + explosionHalfWidth;
+            float explosionHalfHeight = explosionBounds.height / 2.0f;
+            float explosionCenterY = explosionBounds.top + explosionHalfHeight;
+            explosionSprite->setOrigin(explosionCenterX, explosionCenterY);
+
+            // Rotate the explosion by a random amount to add more variety.
+            /// @todo Refactor this randomness logic to a more central location.
+            const unsigned int MAX_ROTATION_IN_DEGREES = 360;
+            unsigned int randomRotationInDegrees = ( randomNumberGenerator() % MAX_ROTATION_IN_DEGREES );
+            explosionSprite->setRotation(static_cast<float>(randomRotationInDegrees));
+
+            // Position the explosion to correspond with the position of the collided object.
+            // Since we needed to set the origin of the explosion to the center (as opposed to top-left)
+            // for rotation, we need to calculate the center of the object's bounding box.
+            float collidedObjectHalfWidth = collidedObjectRectangle.width / 2.0f;
+            float collidedObjectCenterX = collidedObjectRectangle.left + collidedObjectHalfWidth;
+            float collidedObjectHalfHeight = collidedObjectRectangle.height / 2.0f;
+            float collidedObjectCenterY = collidedObjectRectangle.top + collidedObjectHalfHeight;
+            explosionSprite->setPosition(collidedObjectCenterX, collidedObjectCenterY);
 
             // Load the explosion sound data.
             const std::string EXPLOSION_SOUND_FILEPATH = "res/Sounds/Explosion.wav";
@@ -725,8 +841,16 @@ void GameplayState::RenderGameObjects(sf::RenderTarget& renderTarget)
 void GameplayState::AddToScore(const uint16_t pointsToAdd)
 {
     // Update the player's current score.
-    m_currentScore += pointsToAdd;
-    m_gameplayHud->SetScore(m_currentScore);
+    // The max high score is the largest 100-based multiple that can fit within
+    // the data type limits.  It is unlikely that a player will reach this high
+    // score due to difficulty increases in the game, but this check is provided
+    // just in case to prevent annoying the player with a wrap-around score.
+    bool maxHighScoreReached = (m_currentScore >= MAX_HIGH_SCORE);
+    if (!maxHighScoreReached)
+    {
+        m_currentScore += pointsToAdd;
+        m_gameplayHud->SetScore(m_currentScore);
+    }
 
     // Update the high score, if needed.
     bool newHighestScoreReached = (m_currentScore > m_highScore);
@@ -740,13 +864,20 @@ void GameplayState::AddToScore(const uint16_t pointsToAdd)
 void GameplayState::UpdateSubState()
 {
     // CHECK IF THE PLAYER HAS WON.
-    bool playerWon = (m_aliens.size() <= 0);
+    // The max high score is the largest 100-based multiple that can fit within
+    // the data type limits.  It is unlikely that a player will reach this high
+    // score due to difficulty increases in the game, but this check is provided
+    // just in case to prevent annoying the player with a wrap-around score.
+    bool maxHighScoreReached = (m_currentScore >= MAX_HIGH_SCORE);
+    bool allAliensKilled = (m_aliens.size() <= 0);
+    bool playerWon = (maxHighScoreReached || allAliensKilled);
     if (playerWon)
     {
         m_currentSubState = VICTORY_SUBSTATE;
-        /// @todo   Set the "player won" text.
+
+        m_gameplayHud->ShowPlayerWonText();
     }
-    
+
     // CHECK IF THE PLAYER HAS LOST.
     bool playerCompletelyDead = (m_bunnyPlayer->GetLives() <= 0);
     bool easterEggsAllGone = (m_easterEggs.size() <= 0);
@@ -756,19 +887,47 @@ void GameplayState::UpdateSubState()
         // In the event that the player defeated all aliens but simultaneously
         // lost all lives or eggs, we still want to consider that a game over.
         m_currentSubState = GAME_OVER_SUBSTATE;
-        /// @todo   Set the "player lost" text.
-    }
 
-    // CHECK IF THE GAMEPLAY HAS COMPLETED.
-    bool gameplayCompleted = (playerWon || playerLost);
-    if (gameplayCompleted)
-    {
-        // Save the updated set of size scores.
-        SaveHighScores();
+        m_gameplayHud->ShowPlayerLostText();
     }
 }
 
 void GameplayState::SaveHighScores()
 {
-    /// @todo
+    /// @todo   Rethink refactoring the HighScores class to support
+    ///         these kinds of operations.  We may also be able
+    ///         to consider using the heap operations provided in
+    ///         the C++11 algorithm library.
+
+    // ADD THE CURRENT PLAYER'S SCORE AS A POTENTIAL HIGH SCORE.
+    std::vector<uint16_t> highScores;
+    highScores.push_back(m_currentScore);
+
+    // ADD ALL OF THE PREVIOUS HIGH SCORE'S AS POTENTIAL HIGH SCORES.
+    std::array<uint16_t, SAVE_DATA::HighScores::MAX_HIGH_SCORES_COUNT> originalHighScores =
+        m_highScores.GetHighScoresInDescendingOrder();
+    for (uint16_t originalHighScore : originalHighScores)
+    {
+        highScores.push_back(originalHighScore);
+    }
+
+    // SORT ALL OF THE POTENTIAL HIGH SCORES SO THAT THE HIGHEST ONES ARE FIRST.
+    auto sortDescending = [](uint16_t leftScore, uint16_t rightScore) { return (leftScore > rightScore); };
+    std::stable_sort(highScores.begin(), highScores.end(), sortDescending);
+
+    // WRITE THE TOP HIGH SCORES TO FILE.
+    const std::string HIGH_SCORES_FILEPATH = "res/highScores.txt";
+    std::ofstream highScoresFile(HIGH_SCORES_FILEPATH, std::ios_base::out | std::ios_base::trunc);
+    if (highScoresFile.is_open())
+    {
+        for (unsigned int savedHighScoreCount = 0;
+            (savedHighScoreCount < SAVE_DATA::HighScores::MAX_HIGH_SCORES_COUNT &&
+            savedHighScoreCount < highScores.size());
+            ++savedHighScoreCount)
+        {
+            highScoresFile << highScores[savedHighScoreCount] << std::endl;
+        }
+
+        highScoresFile.close();
+    }
 }

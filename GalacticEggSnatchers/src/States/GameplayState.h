@@ -14,6 +14,32 @@
 namespace STATES
 {
     ////////////////////////////////////////////////////////
+    /// @brief  Parameters for tuning alien difficulty.
+    ////////////////////////////////////////////////////////
+    struct AlienDifficultyParameters
+    {
+        /// @brief  The absolute minimum time supported by the game for the minimum time between missile fires.
+        static const unsigned int MIN_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS = 1;
+        /// @brief  The default minimum time between missile fires.
+        static const unsigned int DEFAULT_MIN_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS = 3;
+        /// @brief  The absolute maximum time supported by the game for the maximum time between missile fires.
+        static const unsigned int MAX_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS = 60;
+        /// @brief  The default maximum time between missile fires.
+        static const unsigned int DEFAULT_MAX_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS = MAX_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS;
+        
+        unsigned int MinTimeBetweenMissileFiresInSeconds;   ///< Minimum time to potentially wait between firing missiles.
+        unsigned int MaxTimeBetweenMissileFiresInSeconds;   ///< Maximum time to potentially wait between firing missiles.
+        float HorizontalMoveSpeedInPixelsPerSecond;  ///< The horizontal movement speed of the aliens.
+
+        /// @brief  Constructor.
+        AlienDifficultyParameters() :
+            MinTimeBetweenMissileFiresInSeconds(DEFAULT_MIN_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS),
+            MaxTimeBetweenMissileFiresInSeconds(DEFAULT_MAX_TIME_BETWEEN_MISSILE_FIRES_IN_SECONDS),
+            HorizontalMoveSpeedInPixelsPerSecond(OBJECTS::Alien::DEFAULT_MOVE_SPEED_IN_PIXELS_PER_SECOND)
+        {}
+    };
+
+    ////////////////////////////////////////////////////////
     /// @brief  Defines different "sub-states" that the gameplay
     ///         state might be in.
     ////////////////////////////////////////////////////////
@@ -33,6 +59,7 @@ namespace STATES
     {
     public:
         static const uint16_t DEFAULT_ALIEN_KILL_POINTS;    ///< The default number of points awarded for killing an alien.
+        static const uint16_t MAX_HIGH_SCORE;   ///< The maximum allowed high score.
         
         /// @brief      Constructor.
         /// @param[in]  screenBoundsInPixels - The boundaries of the screen for which to confine game objects.
@@ -60,18 +87,19 @@ namespace STATES
         GameplayState(const GameplayState& stateToCopy);    ///< Private to disallow copying.
         GameplayState& operator= (const GameplayState& rhsState);    ///< Private to disallow assignment.
 
-        /// @todo   Rethink the return values fo the "Create" helper methods below
-        ///         because they also generate sprites within the m_sprites list.
-
         /// @brief  Creates the initial Easter bunny for the player.
         /// @return The player Easter bunny in its initial state for a new gameplay session.
         std::shared_ptr<OBJECTS::EasterBunny> CreateInitialBunnyPlayer();
         /// @brief  Creates the initial Easter eggs.
         /// @return The Easter eggs in their initial state for a new gameplay session.
         std::vector< std::shared_ptr<OBJECTS::EasterEgg> > CreateInitialEasterEggs();
-        /// @brief  Creates the initial enemy aliens.
-        /// @return The aliens in their initial state for a new gameplay session.
-        std::list< std::shared_ptr<OBJECTS::Alien> > CreateInitialAliens();
+        /// @brief      Creates the initial enemy aliens.
+        /// @param[in]  alienParameters - Parameters defining how difficult the aliens should be.
+        /// @return     The aliens in their initial state for a new gameplay session.
+        std::list< std::shared_ptr<OBJECTS::Alien> > CreateInitialAliens(const AlienDifficultyParameters& alienParameters);
+
+        /// @brief  Spawns a new wave of aliens with increasing difficulty.
+        void SpawnAlienWave();
 
         /// @brief  Loads high scores for this state.
         void LoadHighScores();
@@ -141,6 +169,7 @@ namespace STATES
         uint16_t m_currentScore;    ///< The player's current score.
         uint16_t m_highScore;   ///< The all-time high score.
         SAVE_DATA::HighScores m_highScores; ///< All of the high scores.
+        AlienDifficultyParameters m_alienParameters;    ///< Parameters for tuning the alien difficulty.
 
         // GAME OBJECT MEMBER VARIABLES.
         std::shared_ptr<OBJECTS::EasterBunny> m_bunnyPlayer;    ///< The Easter bunny controlled by the player.

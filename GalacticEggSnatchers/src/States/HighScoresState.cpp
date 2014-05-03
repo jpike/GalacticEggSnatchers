@@ -60,7 +60,7 @@ SAVE_DATA::HighScores HighScoresState::LoadHighScores() const
     SAVE_DATA::HighScores highScores;
     
     // OPEN THE HIGH SCORES FILE.
-    const std::string HIGH_SCORES_FILEPATH = "res/data/highScores.txt";
+    const std::string HIGH_SCORES_FILEPATH = "res/highScores.txt";
     std::ifstream highScoresFile(HIGH_SCORES_FILEPATH, std::ios_base::in);
     if (highScoresFile.is_open())
     {

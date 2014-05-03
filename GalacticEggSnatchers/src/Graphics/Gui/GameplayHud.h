@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Graphics/Gui/GameplayEndedLabel.h"
 #include "Graphics/Gui/HighScoreLabel.h"
 #include "Graphics/Gui/LivesLabel.h"
 #include "Graphics/Gui/ScoreLabel.h"
@@ -41,6 +42,12 @@ namespace GUI
         /// @param[in]  highScore - The high score to display in the HUD.
         void SetHighScore(const uint16_t highScore);
 
+        /// @brief  Displays a message indicating that the player has won the game.
+        void ShowPlayerWonText();
+
+        /// @brief  Displays a message indicating that the player has lost the game.
+        void ShowPlayerLostText();
+
     private:
         GameplayHud(const GameplayHud& hudToCopy);  ///< Private to disallow copying.
         GameplayHud& operator= (const GameplayHud& rhsHud); ///< Private to disallow assignment.
@@ -52,6 +59,7 @@ namespace GUI
         LivesLabel m_livesLabel;    ///< The label displaying the player's lives.
         ScoreLabel m_scoreLabel;    ///< The label displaying the current score.
         HighScoreLabel m_highScoreLabel;    ///< The label displaying the all-time high score.
+        GameplayEndedLabel m_gameplayEndedLabel;    ///< The label displaying either win or loss message to the player.
     };
 }
 }

@@ -13,7 +13,8 @@ const sf::Color GameplayHud::DEFAULT_TEXT_COLOR = sf::Color::White;
 GameplayHud::GameplayHud(const sf::FloatRect& screenBoundsInPixels, const std::shared_ptr<sf::Font>& textFont) :
     m_livesLabel(DEFAULT_FONT_SIZE_IN_PIXELS, DEFAULT_TEXT_COLOR, textFont),
     m_scoreLabel(DEFAULT_FONT_SIZE_IN_PIXELS, DEFAULT_TEXT_COLOR, textFont),
-    m_highScoreLabel(DEFAULT_FONT_SIZE_IN_PIXELS, DEFAULT_TEXT_COLOR, textFont)
+    m_highScoreLabel(DEFAULT_FONT_SIZE_IN_PIXELS, DEFAULT_TEXT_COLOR, textFont),
+    m_gameplayEndedLabel(screenBoundsInPixels, DEFAULT_TEXT_COLOR, textFont)
 {
     // POSITION EACH OF THE LABELS.
     PositionLabels(screenBoundsInPixels);
@@ -29,6 +30,11 @@ void GameplayHud::Render(sf::RenderTarget& renderTarget)
     m_livesLabel.Render(renderTarget);
     m_scoreLabel.Render(renderTarget);
     m_highScoreLabel.Render(renderTarget);
+
+    if (m_gameplayEndedLabel.IsVisible())
+    {
+        m_gameplayEndedLabel.Render(renderTarget);
+    }
 }
 
 void GameplayHud::SetLivesCount(const uint8_t livesCount)
@@ -44,6 +50,20 @@ void GameplayHud::SetScore(const uint16_t score)
 void GameplayHud::SetHighScore(const uint16_t highScore)
 {
     m_highScoreLabel.SetHighScore(highScore);
+}
+
+void GameplayHud::ShowPlayerWonText()
+{
+    m_gameplayEndedLabel.SetText("YOU WIN!");
+
+    m_gameplayEndedLabel.SetVisible(true);
+}
+
+void GameplayHud::ShowPlayerLostText()
+{
+    m_gameplayEndedLabel.SetText("GAME OVER");
+
+    m_gameplayEndedLabel.SetVisible(true);
 }
 
 void GameplayHud::PositionLabels(const sf::FloatRect& screenBoundsInPixels)

@@ -21,17 +21,33 @@ namespace OBJECTS
     class Alien : public IGameObject, public GRAPHICS::IRenderable, public PHYSICS::COLLISIONS::ICollidable
     {
     public:
-        /// @brief  The movement speed of an alien in pixels for second.
+        /// @brief  The default movement speed of an alien in pixels for second.
         ///         The actual value has been determined based on experimentation to
         ///         decide what feels right and what would help balance the gameplay.
-        static const float MOVE_SPEED_IN_PIXELS_PER_SECOND;
+        static const float DEFAULT_MOVE_SPEED_IN_PIXELS_PER_SECOND;
         
-        /// @brief  Constructor.  Resources provided via the constructor
-        ///         may be modified by this object during its lifetime.
-        /// @param  sprite - The graphical sprite for this alien.
-        /// @param  missileTexture - The texture for missiles fired by this alien.
-        /// @param  missileSound - The sound to play for missiles fired by this alien.
+        /// @brief      Constructor.  Resources provided via the constructor
+        ///             may be modified by this object during its lifetime.
+        ///
+        ///             The provided missile time ranges can help be used to tune the difficulty
+        ///             of the artificial intelligence.  However, they are not strictly
+        ///             guaranteed to be absolute minimums and maximums - randomness
+        ///             is involved, so an alien may fire more or less often than
+        ///             the time range provided.
+        ///
+        /// @param[in]  minTimeBetweenMissileFiresInSeconds - The miminum possible time
+        ///             between the alien deciding that it wants to fire a missile.
+        /// @param[in]  maxTimeBetweenMissileFiresInSeconds - The maximum possible time
+        ///             between the alien deciding that it wants to fire a missile.
+        /// @param[in]  moveSpeedInPixelsPerSecond - The horizontal movement speed of
+        ///             the alien in pixels per second.
+        /// @param      sprite - The graphical sprite for this alien.
+        /// @param      missileTexture - The texture for missiles fired by this alien.
+        /// @param      missileSound - The sound to play for missiles fired by this alien.
         explicit Alien(
+            const unsigned int minTimeBetweenMissileFiresInSeconds,
+            const unsigned int maxTimeBetweenMissileFiresInSeconds,
+            const float moveSpeedInPixelsPerSecond, 
             const std::shared_ptr<sf::Sprite>& sprite, 
             const std::shared_ptr<sf::Texture>& missileTexture,
             const std::shared_ptr<sf::SoundBuffer>& missileSound);

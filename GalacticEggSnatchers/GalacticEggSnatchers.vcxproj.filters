@@ -156,6 +156,9 @@
     <ClCompile Include="src\SaveData\HighScores.cpp">
       <Filter>Source Files\SaveData</Filter>
     </ClCompile>
+    <ClCompile Include="src\Graphics\Gui\GameplayEndedLabel.cpp">
+      <Filter>Source Files\Graphics\Gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Objects\IGameObject.h">
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="src\SaveData\HighScores.h">
       <Filter>Header Files\SaveData</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Gui\GameplayEndedLabel.h">
+      <Filter>Header Files\Graphics\Gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

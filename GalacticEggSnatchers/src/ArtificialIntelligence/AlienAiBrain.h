@@ -13,8 +13,19 @@ namespace ARTIFICIAL_INTELLIGENCE
     class AlienAiBrain
     {
     public:
-        /// @brief  Constructor.
-        explicit AlienAiBrain();
+        /// @brief      Constructor.
+        ///             The provided time ranges can help be used to tune the difficulty
+        ///             of the artificial intelligence.  However, they are not strictly
+        ///             guaranteed to be absolute minimums and maximums - randomness
+        ///             is involved, so an alien may fire more or less often than
+        ///             the time range provided.
+        /// @param[in]  minTimeBetweenMissileFiresInSeconds - The miminum possible time
+        ///             between the brain deciding that it wants to fire a missile.
+        /// @param[in]  maxTimeBetweenMissileFiresInSeconds - The maximum possible time
+        ///             between the brain deciding that it wants to fire a missile.
+        explicit AlienAiBrain(
+            const unsigned int minTimeBetweenMissileFiresInSeconds,
+            const unsigned int maxTimeBetweenMissileFiresInSeconds);
         
         /// @brief      Copy constructor.
         /// @param[in]  brainToCopy - The brain to copy from.
@@ -40,8 +51,19 @@ namespace ARTIFICIAL_INTELLIGENCE
         /// @brief  Initializes the internal random number generator.
         void InitializeRandomNumberGenerator();
 
-        /// @brief  Initializes the minimum required time between missile fires.
-        void InitializeTimeBetweenMissileFires();
+        /// @brief      Initializes the minimum required time between missile fires.
+        ///             The provided time ranges can help be used to tune the difficulty
+        ///             of the artificial intelligence.  However, they are not strictly
+        ///             guaranteed to be absolute minimums and maximums - randomness
+        ///             is involved, so an alien may fire more or less often than
+        ///             the time range provided.
+        /// @param[in]  minTimeBetweenMissileFiresInSeconds - The miminum possible time
+        ///             between the brain deciding that it wants to fire a missile.
+        /// @param[in]  maxTimeBetweenMissileFiresInSeconds - The maximum possible time
+        ///             between the brain deciding that it wants to fire a missile.
+        void InitializeTimeBetweenMissileFires(
+            const unsigned int minTimeBetweenMissileFiresInSeconds,
+            const unsigned int maxTimeBetweenMissileFiresInSeconds);
 
         sf::Clock m_missileFiringClock;    ///< A clock for tracking how much time passes between desiring firing a missile.
         float m_minTimeBetweenMissileFiresInSeconds;    ///< The minimum amount of time required between missile fires in seconds.

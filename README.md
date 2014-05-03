@@ -1,8 +1,8 @@
 # GALACTIC EGG SNATCHERS
 
-This in-development game is an Easter-themed game similar to Space Invaders.  Target release date is April 30, 2014, with possibly some additional updates done through May 3, 2014.  It is being developed as a collaborative project in the http://www.reddit.com/r/hobbygamedev sub-reddit.
+This is an Easter-themed "arcade-style" game developed as a collaborative project in the http://www.reddit.com/r/hobbygamedev sub-reddit.  It was developed over the course of about a month, being released on May 3, 2014.
 
-The game will be a native Windows game, running at least on Windows 7.
+The game is a native Windows game, running at least on Windows 7.
 
 ## Story
 
