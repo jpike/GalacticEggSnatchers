@@ -8,10 +8,22 @@
 #include "Objects/AllObjects.h"
 #include "Physics/Collisions/CollisionSystem.h"
 #include "Resources/ResourceManager.h"
+#include "SaveData/HighScores.h"
 #include "States/IGameState.h"
 
 namespace STATES
 {
+    ////////////////////////////////////////////////////////
+    /// @brief  Defines different "sub-states" that the gameplay
+    ///         state might be in.
+    ////////////////////////////////////////////////////////
+    enum GameplaySubState
+    {
+        PLAYING_GAME_SUBSTATE = 1,  ///< The player is playing through the main gameplay.
+        VICTORY_SUBSTATE = 2,   ///< The player just won the main game.
+        GAME_OVER_SUBSTATE = 3  ///< The player just lost the main game.
+    };
+
     ////////////////////////////////////////////////////////
     /// @brief  The main gameplay state of the Galactic Egg Snatchers game.
     ///         This state has the player (an Easter bunny) defending
@@ -61,6 +73,9 @@ namespace STATES
         /// @return The aliens in their initial state for a new gameplay session.
         std::list< std::shared_ptr<OBJECTS::Alien> > CreateInitialAliens();
 
+        /// @brief  Loads high scores for this state.
+        void LoadHighScores();
+
         /// @brief  Initializes the gameplay HUD.
         void InitializeHud();
 
@@ -100,6 +115,12 @@ namespace STATES
         /// @param[in]  pointsToAdd - The number of points to add to the current score.
         void AddToScore(const uint16_t pointsToAdd);
 
+        /// @brief  Checks for game win and lost conditions to update the current sub-state.
+        void UpdateSubState();
+
+        /// @brief  Saves the high scores to a data file.
+        void SaveHighScores();
+
         // RESOURCE MEMBER VARIABLES.
         RESOURCES::ResourceManager m_resourceManager;  ///< The system that handles resources.
 
@@ -114,9 +135,12 @@ namespace STATES
         std::shared_ptr<INPUT::IInputController> m_playerController;    ///< The controller supplying input for the player.
         sf::Clock m_bunnyMissileFiringClock;    ///< A clock for tracking how much time passes between the bunny firing a missile.
 
-        // GAMEPLAY STATISTICS.
+        // GAMEPLAY STATISTICS AND MANAGEMENT.
+        GameplaySubState m_currentSubState; ///< The sub-state identifying where the player is related to the main gameplay.
+        GameStateType m_nextMainState;  ///< The next main state for the game, if the gameplay state has ended.
         uint16_t m_currentScore;    ///< The player's current score.
         uint16_t m_highScore;   ///< The all-time high score.
+        SAVE_DATA::HighScores m_highScores; ///< All of the high scores.
 
         // GAME OBJECT MEMBER VARIABLES.
         std::shared_ptr<OBJECTS::EasterBunny> m_bunnyPlayer;    ///< The Easter bunny controlled by the player.

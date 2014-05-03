@@ -1,3 +1,4 @@
+#include <fstream>
 #include <stdexcept>
 #include "GalacticEggSnatchersGame.h"
 #include "Graphics/IRenderable.h"
@@ -22,8 +23,11 @@ GameplayState::GameplayState(const sf::FloatRect& screenBoundsInPixels) :
     m_collisionSystem(),
     m_playerController(),
     m_bunnyMissileFiringClock(),
+    m_nextMainState(GAME_STATE_TYPE_INVALID),
+    m_currentSubState(PLAYING_GAME_SUBSTATE),
     m_currentScore(0),
     m_highScore(0),
+    m_highScores(),
     m_bunnyPlayer(),
     m_easterEggs(),
     m_aliens(),
@@ -35,6 +39,9 @@ GameplayState::GameplayState(const sf::FloatRect& screenBoundsInPixels) :
     m_bunnyPlayer = CreateInitialBunnyPlayer();
     m_easterEggs = CreateInitialEasterEggs();
     m_aliens = CreateInitialAliens();
+
+    // LOAD THE HIGH SCORES.
+    LoadHighScores();
 
     // INITIALIZE THE HUD.
     InitializeHud();
@@ -52,29 +59,37 @@ GameStateType GameplayState::GetStateType() const
 }
 
 GameStateType GameplayState::GetNextState() const
-{
-    /// @todo   Update this to a different value once we support switching to different
-    ///         states from the current state.
-    return GAME_STATE_TYPE_INVALID;
+{    
+    return m_nextMainState;
 }
 
 void GameplayState::Update(const sf::Time& elapsedTime)
 {
-    // HANDLE USER INPUT.
-    HandleInput(*m_playerController, elapsedTime);
+    // UPDATE THE GAME ONLY IF MAIN GAMEPLAY IS GOING ON.
+    // This will "freeze" the game when the player has won or lost.
+    // Updates for handling the win/lost sub-states are elsewhere.
+    bool gameplayOccurring = (PLAYING_GAME_SUBSTATE == m_currentSubState);
+    if (gameplayOccurring)
+    {
+        // HANDLE USER INPUT.
+        HandleInput(*m_playerController, elapsedTime);
 
-    // UPDATE THE MAIN GAME OBJECTS.
-    UpdateGameObjects(elapsedTime);
+        // UPDATE THE MAIN GAME OBJECTS.
+        UpdateGameObjects(elapsedTime);
     
-    // HANDLE GAME OBJECT COLLISIONS.
-    HandleGameObjectCollisions();
+        // HANDLE GAME OBJECT COLLISIONS.
+        HandleGameObjectCollisions();
 
-    // HANDLE COLLISIONS WITH THE SCREEN BOUNDARIES.
-    HandleScreenBoundaryCollisions(m_screenBoundsInPixels);
+        // HANDLE COLLISIONS WITH THE SCREEN BOUNDARIES.
+        HandleScreenBoundaryCollisions(m_screenBoundsInPixels);
 
-    // UPDATE THE HUD.
-    /// @todo   Update the scores.
-    m_gameplayHud->SetLivesCount(m_bunnyPlayer->GetLives());
+        // UPDATE THE HUD.
+        /// @todo Scores are updated elsewhere, but maybe they should be updated here?
+        m_gameplayHud->SetLivesCount(m_bunnyPlayer->GetLives());
+    }
+
+    // UPDATE THE SUB-STATE OF THE GAME TO DETECT WIN/LOSS CONDITIONS.
+    UpdateSubState();
 }
 
 void GameplayState::Render(sf::RenderTarget& renderTarget)
@@ -85,7 +100,16 @@ void GameplayState::Render(sf::RenderTarget& renderTarget)
 
 void GameplayState::HandleKeyPress(const sf::Keyboard::Key key)
 {
-    // Nothing to do yet for this state.
+    // CHECK IF THE GAMEPLAY HAS ENDED.
+    bool playerWon = (VICTORY_SUBSTATE == m_currentSubState);
+    bool playerLost = (GAME_OVER_SUBSTATE == m_currentSubState);
+    bool gameplayEnded = (playerWon || playerLost);
+    if (gameplayEnded)
+    {
+        // Have the game return to the title screen since the gameplay
+        // has ended and the user has pressed a key.
+        m_nextMainState = GAME_STATE_TYPE_TITLE;
+    }
 }
 
 std::shared_ptr<OBJECTS::EasterBunny> GameplayState::CreateInitialBunnyPlayer()
@@ -241,6 +265,45 @@ std::list< std::shared_ptr<OBJECTS::Alien> > GameplayState::CreateInitialAliens(
     }
 
     return initialAliens;
+}
+
+void GameplayState::LoadHighScores()
+{   
+    // OPEN THE HIGH SCORES FILE.
+    const std::string HIGH_SCORES_FILEPATH = "res/data/highScores.txt";
+    std::ifstream highScoresFile(HIGH_SCORES_FILEPATH, std::ios_base::in);
+    if (highScoresFile.is_open())
+    {
+        // READ IN EACH HIGH SCORE.
+        unsigned int highScoresCount = 0;
+        while (highScoresFile.good())
+        {
+            // READ THE NEXT HIGH SCORE FROM THE FILE.
+            uint16_t highScore = 0;
+            highScoresFile >> highScore;
+            
+            // CHECK IF THERE IS ROOM FOR ANOTHER HIGH SCORE.
+            bool roomForAnotherHighScore = (highScoresCount < SAVE_DATA::HighScores::MAX_HIGH_SCORES_COUNT);
+            if (roomForAnotherHighScore)
+            {
+                highScoresCount++;
+                m_highScores.AddHighScore(highScore);
+            }
+            else
+            {
+                // Stop reading high scores.
+                break;
+            }
+        }
+
+        // CLOSE THE OPEN FILE.
+        highScoresFile.close();
+    }
+
+    // GET THE TOP HIGH SCORE FOR THE GAME.
+    std::array<uint16_t, SAVE_DATA::HighScores::MAX_HIGH_SCORES_COUNT> sortedHighScores = 
+        m_highScores.GetHighScoresInDescendingOrder();
+    m_highScore = sortedHighScores.front();
 }
 
 void GameplayState::InitializeHud()
@@ -661,8 +724,51 @@ void GameplayState::RenderGameObjects(sf::RenderTarget& renderTarget)
 
 void GameplayState::AddToScore(const uint16_t pointsToAdd)
 {
+    // Update the player's current score.
     m_currentScore += pointsToAdd;
     m_gameplayHud->SetScore(m_currentScore);
-    /// @todo   Check if the high score has been exceeded and should be replaced with
-    ///         the current score.
+
+    // Update the high score, if needed.
+    bool newHighestScoreReached = (m_currentScore > m_highScore);
+    if (newHighestScoreReached)
+    {
+        m_highScore = m_currentScore;
+        m_gameplayHud->SetHighScore(m_highScore);
+    }
+}
+
+void GameplayState::UpdateSubState()
+{
+    // CHECK IF THE PLAYER HAS WON.
+    bool playerWon = (m_aliens.size() <= 0);
+    if (playerWon)
+    {
+        m_currentSubState = VICTORY_SUBSTATE;
+        /// @todo   Set the "player won" text.
+    }
+    
+    // CHECK IF THE PLAYER HAS LOST.
+    bool playerCompletelyDead = (m_bunnyPlayer->GetLives() <= 0);
+    bool easterEggsAllGone = (m_easterEggs.size() <= 0);
+    bool playerLost = (playerCompletelyDead || easterEggsAllGone);
+    if (playerLost)
+    {
+        // In the event that the player defeated all aliens but simultaneously
+        // lost all lives or eggs, we still want to consider that a game over.
+        m_currentSubState = GAME_OVER_SUBSTATE;
+        /// @todo   Set the "player lost" text.
+    }
+
+    // CHECK IF THE GAMEPLAY HAS COMPLETED.
+    bool gameplayCompleted = (playerWon || playerLost);
+    if (gameplayCompleted)
+    {
+        // Save the updated set of size scores.
+        SaveHighScores();
+    }
+}
+
+void GameplayState::SaveHighScores()
+{
+    /// @todo
 }

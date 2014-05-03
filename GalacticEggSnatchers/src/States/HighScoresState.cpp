@@ -149,7 +149,6 @@ void HighScoresState::InitializeHighScoresText(SAVE_DATA::HighScores& highScores
         float scoreXPositionInPixels = screenCenterXInPixels - scoreHalfWidth;
         currentScoreText.setPosition(scoreXPositionInPixels, currentScoreYPositionInPixels);
 
-
         m_highScores.push_back(currentScoreText);
 
         // Adjust the score position for the next score.
