@@ -8,3 +8,5 @@ Mercy404 (reddit) - Sound
 
 The following "third parties" contributed to the game:
 Andrew Tyler (see ThirdPartyLicenses/Font_License.txt) - Font
+
+Special thanks to everyone at the reddit.com/r/hobbygamedev community!

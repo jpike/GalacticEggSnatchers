@@ -108,4 +108,18 @@ void CreditsState::InitializeCreditsText()
         BUFFER_SPACE_BETWEEN_CONTRIBUTORS);
     sixthContributor.setPosition(CONTRIBUTOR_X_POSITION_IN_PIXELS, sixthContributorYPositionInPixels);
     m_contributors.push_back(sixthContributor);
+
+    sf::Text specialThanksContributors(
+        "Special thanks to everyone at the \nreddit.com/r/hobbygamedev community!", 
+        *creditsFont, 
+        CREDITS_FONT_HEIGHT_IN_PIXELS);
+    // Additional space is added before the "special thanks" text to help offset it from
+    // individual contributors.
+    float BUFFER_SPACE_BEFORE_SPECIAL_THANKS = 8.0f * BUFFER_SPACE_BETWEEN_CONTRIBUTORS;
+    float specialThanksContributorsYPositionInPixels = (
+        sixthContributorYPositionInPixels +
+        CREDITS_FONT_HEIGHT_IN_PIXELS +
+        BUFFER_SPACE_BEFORE_SPECIAL_THANKS);
+    specialThanksContributors.setPosition(CONTRIBUTOR_X_POSITION_IN_PIXELS, specialThanksContributorsYPositionInPixels);
+    m_contributors.push_back(specialThanksContributors);
 }
